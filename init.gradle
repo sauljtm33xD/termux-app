@@ -1,0 +1,36 @@
+// Init script para configurar repositorios accesibles
+allprojects {
+    repositories {
+        // Limpiar repositorios por defecto
+        all { ArtifactRepository repo ->
+            if (repo instanceof MavenArtifactRepository) {
+                remove repo
+            }
+        }
+
+        // Usar repositorios locales y cachés
+        mavenLocal()
+
+        // Intentar repositorios alternativos
+        maven {
+            url "https://repo1.maven.org/maven2"
+            metadataSources { mavenPom() }
+        }
+
+        maven {
+            url "https://maven.google.com"
+            metadataSources { mavenPom() }
+        }
+
+        // Gradle plugin repository
+        maven {
+            url "https://plugins.gradle.org/m2"
+            metadataSources { mavenPom() }
+        }
+    }
+}
+
+ext.cacheDir = gradle.gradleUserHomeDir
+
+// Usar modo offline
+gradle.startParameter.offline = false
