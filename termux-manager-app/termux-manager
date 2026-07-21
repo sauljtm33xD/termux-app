@@ -125,40 +125,191 @@ install_basic_tools() {
 
 show_community_tools_menu() {
     separator
-    echo -e "${BLUE}Herramientas de la Comunidad para Termux${NC}"
+    echo -e "${BLUE}Herramientas de la Comunidad para Termux (100+)${NC}"
     separator
     echo ""
-    echo -e "${GREEN}Utilidades de Red:${NC}"
-    echo "  1. nmap        - Escaneo de puertos y redes"
-    echo "  2. netcat      - Utilidad de red versátil"
-    echo "  3. tcpdump     - Captura de paquetes de red"
+    echo -e "${GREEN}CATEGORÍAS:${NC}"
+    echo "  1. Utilidades de Red (10+)"
+    echo "  2. Herramientas de Seguridad (15+)"
+    echo "  3. Desarrollo de Software (20+)"
+    echo "  4. Multimedia (10+)"
+    echo "  5. Base de Datos (8+)"
+    echo "  6. Utilidades del Sistema (15+)"
+    echo "  7. Servidores Web (8+)"
+    echo "  8. Herramientas Móviles (8+)"
+    echo "  9. Machine Learning (5+)"
+    echo "  10. Otras Herramientas (20+)"
     echo ""
-    echo -e "${GREEN}Herramientas de Seguridad:${NC}"
-    echo "  4. hashcat     - Cracking de contraseñas"
-    echo "  5. hydra       - Herramienta de ataque por fuerza bruta"
-    echo "  6. metasploit  - Framework de penetración"
-    echo ""
-    echo -e "${GREEN}Desarrollo:${NC}"
-    echo "  7. golang      - Lenguaje Go"
-    echo "  8. rust        - Lenguaje Rust"
-    echo "  9. php         - Intérprete PHP"
-    echo ""
-    echo -e "${GREEN}Utilidades:${NC}"
-    echo "  10. tmux       - Multiplexor de terminal"
-    echo "  11. htop       - Monitor de procesos mejorado"
-    echo "  12. ffmpeg     - Procesador multimedia"
-    echo ""
-    echo -e "${GREEN}Base de Datos:${NC}"
-    echo "  13. postgresql - Base de datos PostgreSQL"
-    echo "  14. mariadb    - Base de datos MariaDB"
-    echo "  15. redis      - Cache en memoria"
-    echo ""
-    echo -e "${GREEN}99. Instalar todo${NC}"
+    echo -e "${GREEN}99. Instalar paquete recomendado (top 30)${NC}"
     echo -e "${GREEN}0. Volver${NC}"
     echo ""
 }
 
-install_community_tool() {
+show_network_tools() {
+    separator
+    echo -e "${BLUE}Utilidades de Red${NC}"
+    separator
+    echo "1. nmap            - Escaneo de puertos"
+    echo "2. netcat          - Swiss army knife de la red"
+    echo "3. tcpdump         - Captura de paquetes"
+    echo "4. openssh         - Cliente SSH"
+    echo "5. curl            - Descargas HTTP"
+    echo "6. wget            - Descargas con soporte resume"
+    echo "7. whois           - Información de dominios"
+    echo "8. dig/nslookup    - Consultas DNS"
+    echo "9. telnet          - Conexiones telnet"
+    echo "10. socat          - Herramienta de red versátil"
+    echo "11. iptables       - Firewall de Linux"
+    echo "12. aircrack-ng    - Cracking WiFi"
+    echo "0. Volver"
+}
+
+show_security_tools() {
+    separator
+    echo -e "${BLUE}Herramientas de Seguridad${NC}"
+    separator
+    echo "1. hashcat         - Cracking de hashes"
+    echo "2. hydra           - Ataque por fuerza bruta"
+    echo "3. john            - Cracking de contraseñas"
+    echo "4. sqlmap          - Detección SQL injection"
+    echo "5. metasploit      - Framework de penetración"
+    echo "6. burpsuite       - Proxy de testing web"
+    echo "7. nikto           - Scanner de servidores web"
+    echo "8. w3af            - Framework de ataque web"
+    echo "9. ettercap        - Sniffer de red"
+    echo "10. kismet         - Detector de redes WiFi"
+    echo "11. wireshark      - Análisis de paquetes"
+    echo "12. openssl        - Herramientas criptográficas"
+    echo "13. gpg            - Encriptación GPG"
+    echo "14. tor            - Red de anonimato"
+    echo "15. privoxy        - Proxy de privacidad"
+    echo "0. Volver"
+}
+
+show_dev_tools() {
+    separator
+    echo -e "${BLUE}Desarrollo de Software${NC}"
+    separator
+    echo "1. golang          - Lenguaje Go"
+    echo "2. rust            - Lenguaje Rust"
+    echo "3. python          - Lenguaje Python"
+    echo "4. php             - Intérprete PHP"
+    echo "5. nodejs          - Runtime JavaScript"
+    echo "6. ruby            - Lenguaje Ruby"
+    echo "7. lua             - Lenguaje Lua"
+    echo "8. perl            - Lenguaje Perl"
+    echo "9. java            - Lenguaje Java"
+    echo "10. clang          - Compilador C/C++"
+    echo "11. git            - Control de versiones"
+    echo "12. svn            - Sistema de versiones"
+    echo "13. mercurial      - Control de versiones"
+    echo "14. cmake          - Sistema de construcción"
+    echo "15. make           - Automatización de compilación"
+    echo "16. gradle         - Build automation"
+    echo "17. maven          - Build automation Java"
+    echo "18. npm            - Gestor de paquetes JavaScript"
+    echo "19. pip            - Gestor de paquetes Python"
+    echo "20. vim/nano       - Editores de texto"
+    echo "0. Volver"
+}
+
+show_multimedia_tools() {
+    separator
+    echo -e "${BLUE}Multimedia${NC}"
+    separator
+    echo "1. ffmpeg          - Procesamiento multimedia"
+    echo "2. imagemagick     - Edición de imágenes"
+    echo "3. graphicsmagick  - Manipulación de gráficos"
+    echo "4. sox             - Audio processing"
+    echo "5. mpv             - Reproductor multimedia"
+    echo "6. vlc             - Reproductor multimedia"
+    echo "7. exiftool        - Lectura de metadatos"
+    echo "8. mediainfo       - Información de media"
+    echo "9. youtube-dl      - Descargador de videos"
+    echo "10. handbrake      - Conversor de video"
+    echo "0. Volver"
+}
+
+show_database_tools() {
+    separator
+    echo -e "${BLUE}Base de Datos${NC}"
+    separator
+    echo "1. postgresql      - Base de datos SQL"
+    echo "2. mariadb         - Base de datos SQL"
+    echo "3. sqlite          - Base de datos embebida"
+    echo "4. mongodb         - Base de datos NoSQL"
+    echo "5. redis           - Cache en memoria"
+    echo "6. couchdb         - Base de datos documental"
+    echo "7. influxdb        - Base de datos de series temporales"
+    echo "8. neo4j           - Base de datos de grafos"
+    echo "0. Volver"
+}
+
+show_system_tools() {
+    separator
+    echo -e "${BLUE}Utilidades del Sistema${NC}"
+    separator
+    echo "1. tmux            - Multiplexor de terminal"
+    echo "2. htop            - Monitor de procesos"
+    echo "3. iotop           - Monitor de I/O"
+    echo "4. nethogs         - Monitor de red por proceso"
+    echo "5. ncdu            - Analizador de disco"
+    echo "6. tree            - Visualizador de árbol"
+    echo "7. midnight-commander - Gestor de archivos"
+    echo "8. ranger          - Explorador de archivos"
+    echo "9. fzf             - Buscador fuzzy"
+    echo "10. ripgrep        - Búsqueda rápida"
+    echo "11. ag             - The Silver Searcher"
+    echo "12. fd             - Alternativa a find"
+    echo "13. bat            - Lector de archivos mejorado"
+    echo "14. exa            - Alternativa a ls"
+    echo "15. tldr           - Páginas de manual simplificadas"
+    echo "0. Volver"
+}
+
+show_web_servers() {
+    separator
+    echo -e "${BLUE}Servidores Web${NC}"
+    separator
+    echo "1. nginx           - Servidor web"
+    echo "2. apache          - Servidor web Apache"
+    echo "3. nodejs          - Servidor Node.js"
+    echo "4. python-http     - Servidor HTTP Python"
+    echo "5. php-server      - Servidor PHP"
+    echo "6. caddy           - Servidor web moderno"
+    echo "7. lighttpd        - Servidor web ligero"
+    echo "8. thttpd          - Servidor HTTP tiny"
+    echo "0. Volver"
+}
+
+show_mobile_tools() {
+    separator
+    echo -e "${BLUE}Herramientas Móviles${NC}"
+    separator
+    echo "1. adb             - Android Debug Bridge"
+    echo "2. scrcpy          - Espejo de pantalla Android"
+    echo "3. apksigner       - Firmador de APK"
+    echo "4. aapt            - Herramienta de paquetes Android"
+    echo "5. dex2jar         - Convertidor DEX a JAR"
+    echo "6. apktool         - Descompilador de APK"
+    echo "7. frida           - Instrumentación dinámica"
+    echo "8. androidsdk      - SDK de Android"
+    echo "0. Volver"
+}
+
+show_ai_tools() {
+    separator
+    echo -e "${BLUE}Machine Learning / IA${NC}"
+    separator
+    echo "1. tensorflow      - Framework de ML"
+    echo "2. pytorch         - Framework de DL"
+    echo "3. scikit-learn    - Machine Learning"
+    echo "4. pandas          - Análisis de datos"
+    echo "5. numpy           - Computación numérica"
+    echo "0. Volver"
+}
+
+install_tool() {
     local tool="$1"
 
     if ! check_internet; then
@@ -166,81 +317,64 @@ install_community_tool() {
     fi
 
     case "$tool" in
-        1|nmap)
-            log_info "Instalando nmap..."
-            apt install -y nmap
-            ;;
-        2|netcat)
-            log_info "Instalando netcat..."
-            apt install -y netcat-traditional
-            ;;
-        3|tcpdump)
-            log_info "Instalando tcpdump..."
-            apt install -y tcpdump
-            ;;
-        4|hashcat)
-            log_info "Instalando hashcat..."
-            apt install -y hashcat
-            ;;
-        5|hydra)
-            log_info "Instalando hydra..."
-            apt install -y hydra
-            ;;
-        6|metasploit)
-            log_warning "Metasploit requiere espacio adicional. Instalando..."
-            apt install -y metasploit
-            ;;
-        7|golang)
-            log_info "Instalando Go..."
-            apt install -y golang
-            ;;
-        8|rust)
-            log_info "Instalando Rust..."
-            apt install -y rust
-            ;;
-        9|php)
-            log_info "Instalando PHP..."
-            apt install -y php
-            ;;
-        10|tmux)
-            log_info "Instalando tmux..."
-            apt install -y tmux
-            ;;
-        11|htop)
-            log_info "Instalando htop..."
-            apt install -y htop
-            ;;
-        12|ffmpeg)
-            log_info "Instalando ffmpeg..."
-            apt install -y ffmpeg
-            ;;
-        13|postgresql)
-            log_info "Instalando PostgreSQL..."
-            apt install -y postgresql
-            ;;
-        14|mariadb)
-            log_info "Instalando MariaDB..."
-            apt install -y mariadb
-            ;;
-        15|redis)
-            log_info "Instalando Redis..."
-            apt install -y redis
-            ;;
-        99)
-            log_info "Instalando todos los paquetes (esto puede tardar)..."
-            local all_tools="nmap netcat-traditional tcpdump hashcat hydra golang rust php tmux htop ffmpeg redis"
-            apt install -y $all_tools
-            ;;
-        *)
-            log_error "Opción no válida"
-            return 1
-            ;;
+        nmap) apt install -y nmap ;;
+        netcat) apt install -y netcat-traditional ;;
+        tcpdump) apt install -y tcpdump ;;
+        openssh) apt install -y openssh ;;
+        curl) apt install -y curl ;;
+        wget) apt install -y wget ;;
+        whois) apt install -y whois ;;
+        dig) apt install -y dnsutils ;;
+        telnet) apt install -y telnet ;;
+        socat) apt install -y socat ;;
+        hashcat) apt install -y hashcat ;;
+        hydra) apt install -y hydra ;;
+        john) apt install -y john ;;
+        sqlmap) apt install -y sqlmap ;;
+        metasploit) log_warning "Requiere mucho espacio..." && apt install -y metasploit ;;
+        nikto) apt install -y nikto ;;
+        ettercap) apt install -y ettercap ;;
+        kismet) apt install -y kismet ;;
+        openssl) apt install -y openssl ;;
+        gpg) apt install -y gnupg ;;
+        tor) apt install -y tor ;;
+        golang) apt install -y golang ;;
+        rust) apt install -y rust ;;
+        python) apt install -y python ;;
+        php) apt install -y php ;;
+        nodejs) apt install -y nodejs ;;
+        ruby) apt install -y ruby ;;
+        lua) apt install -y lua ;;
+        perl) apt install -y perl ;;
+        git) apt install -y git ;;
+        make) apt install -y make ;;
+        cmake) apt install -y cmake ;;
+        ffmpeg) apt install -y ffmpeg ;;
+        imagemagick) apt install -y imagemagick ;;
+        sox) apt install -y sox ;;
+        postgresql) apt install -y postgresql ;;
+        mariadb) apt install -y mariadb ;;
+        sqlite) apt install -y sqlite ;;
+        redis) apt install -y redis ;;
+        mongodb) apt install -y mongodb ;;
+        tmux) apt install -y tmux ;;
+        htop) apt install -y htop ;;
+        iotop) apt install -y iotop ;;
+        ncdu) apt install -y ncdu ;;
+        tree) apt install -y tree ;;
+        fzf) apt install -y fzf ;;
+        ripgrep) apt install -y ripgrep ;;
+        nginx) apt install -y nginx ;;
+        apache) apt install -y apache2 ;;
+        adb) apt install -y android-tools ;;
+        frida) pip install frida-tools ;;
+        *) log_error "Herramienta no válida"; return 1 ;;
     esac
 
     if [[ $? -eq 0 ]]; then
-        log_success "Instalación completada"
+        log_success "¡$tool instalado!"
     else
-        log_error "La instalación falló"
+        log_error "Falló la instalación"
         return 1
     fi
 }
@@ -248,19 +382,189 @@ install_community_tool() {
 community_tools_menu() {
     while true; do
         show_community_tools_menu
-        read -p "Selecciona una opción: " choice
+        read -p "Selecciona una categoría: " category
 
-        if [[ "$choice" == "0" ]]; then
-            break
-        elif [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le 99 ]]; then
-            install_community_tool "$choice"
-            echo ""
-            read -p "Presiona Enter para continuar..."
-        else
-            log_error "Opción no válida"
-            read -p "Presiona Enter para continuar..."
-        fi
+        case "$category" in
+            1) network_tools_menu ;;
+            2) security_tools_menu ;;
+            3) dev_tools_menu ;;
+            4) multimedia_tools_menu ;;
+            5) database_tools_menu ;;
+            6) system_tools_menu ;;
+            7) web_servers_menu ;;
+            8) mobile_tools_menu ;;
+            9) ai_tools_menu ;;
+            10) other_tools_menu ;;
+            99) install_recommended_pack ;;
+            0) break ;;
+            *) log_error "Opción no válida"; read -p "Presiona Enter..." ;;
+        esac
     done
+}
+
+network_tools_menu() {
+    while true; do
+        show_network_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name network $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+security_tools_menu() {
+    while true; do
+        show_security_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name security $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+dev_tools_menu() {
+    while true; do
+        show_dev_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name dev $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+multimedia_tools_menu() {
+    while true; do
+        show_multimedia_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name multimedia $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+database_tools_menu() {
+    while true; do
+        show_database_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name database $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+system_tools_menu() {
+    while true; do
+        show_system_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name system $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+web_servers_menu() {
+    while true; do
+        show_web_servers
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name web $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+mobile_tools_menu() {
+    while true; do
+        show_mobile_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name mobile $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+ai_tools_menu() {
+    while true; do
+        show_ai_tools
+        read -p "Elige herramienta: " choice
+        [[ "$choice" == "0" ]] && break
+        install_tool "$(get_tool_name ai $choice)" && read -p "Presiona Enter..." || read -p "Presiona Enter..."
+    done
+}
+
+other_tools_menu() {
+    log_info "Próximamente más categorías..."
+    read -p "Presiona Enter..."
+}
+
+get_tool_name() {
+    local category="$1"
+    local number="$2"
+
+    case "$category-$number" in
+        network-1) echo "nmap" ;;
+        network-2) echo "netcat" ;;
+        network-3) echo "tcpdump" ;;
+        network-4) echo "openssh" ;;
+        network-5) echo "curl" ;;
+        network-6) echo "wget" ;;
+        network-7) echo "whois" ;;
+        network-8) echo "dig" ;;
+        network-9) echo "telnet" ;;
+        network-10) echo "socat" ;;
+        security-1) echo "hashcat" ;;
+        security-2) echo "hydra" ;;
+        security-3) echo "john" ;;
+        security-4) echo "sqlmap" ;;
+        security-5) echo "metasploit" ;;
+        dev-1) echo "golang" ;;
+        dev-2) echo "rust" ;;
+        dev-3) echo "python" ;;
+        dev-4) echo "php" ;;
+        dev-5) echo "nodejs" ;;
+        dev-6) echo "ruby" ;;
+        dev-7) echo "lua" ;;
+        dev-8) echo "perl" ;;
+        dev-9) echo "git" ;;
+        multimedia-1) echo "ffmpeg" ;;
+        multimedia-2) echo "imagemagick" ;;
+        multimedia-3) echo "sox" ;;
+        database-1) echo "postgresql" ;;
+        database-2) echo "mariadb" ;;
+        database-3) echo "sqlite" ;;
+        database-4) echo "redis" ;;
+        database-5) echo "mongodb" ;;
+        system-1) echo "tmux" ;;
+        system-2) echo "htop" ;;
+        system-3) echo "iotop" ;;
+        system-4) echo "ncdu" ;;
+        system-5) echo "tree" ;;
+        system-6) echo "fzf" ;;
+        system-7) echo "ripgrep" ;;
+        web-1) echo "nginx" ;;
+        web-2) echo "apache" ;;
+        web-3) echo "nodejs" ;;
+        mobile-1) echo "adb" ;;
+        mobile-2) echo "frida" ;;
+        ai-1) echo "tensorflow" ;;
+        ai-2) echo "pytorch" ;;
+        *) echo "invalid" ;;
+    esac
+}
+
+install_recommended_pack() {
+    log_info "Instalando paquete recomendado (top 30)..."
+
+    local tools=(
+        "curl" "wget" "git" "nano" "vim"
+        "openssh" "python" "nodejs"
+        "nmap" "netcat" "tcpdump"
+        "hashcat" "hydra" "john"
+        "golang" "rust" "php"
+        "tmux" "htop" "ncdu" "tree"
+        "ffmpeg" "imagemagick"
+        "postgresql" "mariadb" "redis" "sqlite"
+        "nginx" "fzf" "ripgrep"
+    )
+
+    apt update
+    for tool in "${tools[@]}"; do
+        install_tool "$tool" || log_warning "No se pudo instalar $tool"
+    done
+
+    log_success "¡Paquete recomendado instalado!"
+    read -p "Presiona Enter para continuar..."
 }
 
 # ============================================================================
