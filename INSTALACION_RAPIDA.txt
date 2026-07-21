@@ -1,0 +1,139 @@
+═════════════════════════════════════════════════════════════════════════════
+                    TERMUX MANAGER - INSTALACIÓN RÁPIDA
+                    Para copiar y pegar en el móvil
+═════════════════════════════════════════════════════════════════════════════
+
+PASO 1: DESCARGAR TERMUX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si no tienes Termux:
+1. Abre Google Play Store
+2. Busca "Termux"
+3. Instala (by Fredrik Fornwall)
+4. Abre la aplicación
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASO 2: COPIAR Y PEGAR EN TERMUX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Copia TODA esta línea y pégala en Termux, luego presiona Enter:
+
+curl -L https://raw.githubusercontent.com/sauljtm33xD/termux-app/claude/termux-executable-no-root-w55bb0/install-termux-manager.sh | bash
+
+═════════════════════════════════════════════════════════════════════════════
+
+ESPERARÁ A QUE SE INSTALE (puede tardar 1-2 minutos)
+
+El instalador hará automáticamente:
+✓ Descargar los archivos
+✓ Configurar permisos
+✓ Instalar en el PATH
+✓ Crear alias
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASO 3: ¡LISTO! USAR TERMUX MANAGER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Solo escribe en Termux:
+
+termux-manager
+
+═════════════════════════════════════════════════════════════════════════════
+
+COMANDOS RÁPIDOS SIN MENÚ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Instalar lo básico (curl, git, python, nodejs):
+    termux-manager install-basic
+
+Ver información del sistema:
+    termux-manager system-info
+
+Ver herramientas de la comunidad:
+    termux-manager install-community
+
+Información sobre acceso root:
+    termux-manager root-info
+
+Optimizar Termux (limpiar y actualizar):
+    termux-manager optimize
+
+═════════════════════════════════════════════════════════════════════════════
+
+PROBLEMAS COMUNES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ "curl: not found"
+Solución: Instalar curl primero
+    apt update && apt install curl
+
+❌ "No hay conexión"
+Solución: Verificar WiFi o datos, luego:
+    ping 8.8.8.8
+
+❌ "Permiso denegado"
+Solución:
+    chmod +x ~/.termux-manager/termux-manager
+
+═════════════════════════════════════════════════════════════════════════════
+
+OPCIÓN ALTERNATIVA (Si la línea anterior no funciona):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Paso 1: Descargar el paquete
+    wget https://github.com/sauljtm33xD/termux-app/releases/download/termux-manager-v1.0/termux-manager-installer.tar.gz
+
+Paso 2: Extraer
+    tar -xzf termux-manager-installer.tar.gz
+
+Paso 3: Instalar
+    bash install-termux-manager.sh
+
+═════════════════════════════════════════════════════════════════════════════
+
+HERRAMIENTAS DISPONIBLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Redes: nmap, netcat, tcpdump
+Seguridad: hashcat, hydra, metasploit
+Desarrollo: golang, rust, php
+Utilidades: tmux, htop, ffmpeg
+Bases de datos: postgresql, mariadb, redis
+
+═════════════════════════════════════════════════════════════════════════════
+
+¿NECESITAS ROOT?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ver opciones:
+    termux-manager root-info
+
+Opciones seguras:
+- Magisk (requiere custom ROM)
+- PhoenixOS (ROM completa)
+- KernelSU (alternativa moderna)
+- proot (simula root sin permisos reales)
+
+═════════════════════════════════════════════════════════════════════════════
+
+¿PREGUNTAS O PROBLEMAS?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Documentación completa:
+    https://github.com/termux/termux-app
+
+Wiki de Termux:
+    https://wiki.termux.com
+
+Community Discord:
+    https://discord.gg/HXpF69X
+
+═════════════════════════════════════════════════════════════════════════════
+
+Versión: 1.0
+Estado: ✓ Listo para usar
+Requisitos: Android 7+, 100MB espacio libre, conexión a internet
+
+═════════════════════════════════════════════════════════════════════════════
