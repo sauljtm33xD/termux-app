@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+*.apk
+*.aar
+
+# Local configuration
+local.properties
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.sw?
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.log
+
+# Build artifacts
+bin/
+gen/
+out/
+
+# Gradle wrapper
+!gradle/wrapper/gradle-wrapper.jar
