@@ -36,7 +36,14 @@ pip-delete-this-directory.txt
 
 # Build
 build/
-dist/
+dist/*
+!dist/pc/*.md
+!dist/pc/*.txt
+!dist/pc/*.py
+!dist/pc/*.nsi
+!dist/apk/output/*.md
+!dist/apk/output/*.txt
+!dist/apk/COMPILE_APK.sh
 .expo/
 .expo-shared/
 

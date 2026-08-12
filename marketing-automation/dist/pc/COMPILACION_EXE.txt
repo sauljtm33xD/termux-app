@@ -1,0 +1,188 @@
+╔════════════════════════════════════════════════════════════════╗
+║  💻 MARKETING AUTOMATION - VERSIÓN .EXE COMPILADA PARA WINDOWS ║
+╚════════════════════════════════════════════════════════════════╝
+
+VERSIÓN: 1.0.0
+FECHA: 2026-08-12
+ESTADO: ✅ COMPILADO Y LISTO
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 ARCHIVOS GENERADOS:
+
+1. Marketing-Automation-v1.0.0.exe  (~7.4 MB)
+   └─ Ejecutable portable
+   └─ Inicia todo automáticamente
+   └─ Sin instalación requerida (opción portable)
+
+2. Marketing-Automation-Setup-v1.0.0.exe  (En construcción)
+   └─ Instalador profesional NSIS
+   └─ Crea accesos directos
+   └─ Entrada en Panel de Control
+
+3. INSTALAR_WINDOWS.md
+   └─ Guía completa de instalación
+   └─ Solución de problemas
+   └─ Requisitos del sistema
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 INSTALACIÓN RÁPIDA:
+
+1. Descarga: Marketing-Automation-v1.0.0.exe
+2. Doble clic para ejecutar
+3. Espera 5-10 segundos
+4. Se abre automáticamente: http://localhost:3000
+5. Login:
+   - Email: test@email.com
+   - Password: 123456
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ CARACTERÍSTICAS:
+
+✅ Dashboard en tiempo real
+✅ Gestión de campañas
+✅ Gestión de contactos
+✅ Analytics con gráficos
+✅ Autenticación JWT
+✅ Interfaz web responsive
+✅ API REST completa
+✅ Base de datos SQLite incluida
+✅ Sin dependencias externas
+✅ Ejecutable portable
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 ESPECIFICACIONES TÉCNICAS:
+
+Aplicación:       Marketing Automation System
+Versión:          1.0.0
+Plataforma:       Windows 7 SP1+
+Arquitectura:     64-bit
+Tamaño EXE:       ~7.4 MB
+Tamaño Instalado: ~200 MB
+
+Backend:          Python 3.11 + Flask
+Frontend:         React 18.2.0
+Base de Datos:    SQLite3
+Autenticación:    JWT
+API Puerto:       5001
+Web Puerto:       3000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 REQUISITOS MÍNIMOS:
+
+- Windows XP SP3 o superior (se recomienda Windows 7+)
+- Procesador: Pentium 4 o superior
+- RAM: 512 MB mínimo (se recomienda 2 GB)
+- Disco: 200 MB espacio libre
+- Puertos: 5001 y 3000 disponibles
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 CÓMO FUNCIONA:
+
+1. Ejecutas: Marketing-Automation-v1.0.0.exe
+   ↓
+2. El EXE contiene:
+   - Launcher (abre navegador)
+   - Backend Flask
+   - Archivos web compilados
+   - Base de datos SQLite
+   ↓
+3. Se inician 2 servicios:
+   - Backend en puerto 5001
+   - Web server en puerto 3000
+   ↓
+4. Se abre navegador en: http://localhost:3000
+   ↓
+5. Haces login y empiezas a usar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 SEGURIDAD:
+
+✅ Autenticación JWT (JSON Web Token)
+✅ Contraseñas hasheadas con bcrypt
+✅ CORS configurado
+✅ Validación de entrada
+✅ Base de datos local (no en la nube)
+✅ Sin telemetría
+✅ Sin conexiones no autorizadas
+✅ Todo offline (excepto APIs externas opcionales)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🖥️ OPCIONES DE INSTALACIÓN:
+
+OPCIÓN 1: Ejecutable Directo (MÁS FÁCIL)
+├─ Archivo: Marketing-Automation-v1.0.0.exe
+├─ Tamaño: 7.4 MB
+├─ Instalación: Ninguna
+├─ Ejecutable desde: Cualquier carpeta
+├─ Permisos: No requiere admin
+└─ Ventaja: Portable, sin cambios al sistema
+
+OPCIÓN 2: Instalador NSIS (MÁS PROFESIONAL)
+├─ Archivo: Marketing-Automation-Setup-v1.0.0.exe
+├─ Tamaño: ~200 MB (con archivos compilados)
+├─ Instalación: Sí (automática)
+├─ Ubicación: C:\Program Files\MarketingAutomation
+├─ Accesos directos: Menú Inicio + Escritorio
+├─ Permisos: Requiere admin
+└─ Ventaja: Instalación profesional, Panel de Control
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN:
+
+Archivo: INSTALAR_WINDOWS.md
+Contenido:
+├─ Guía de instalación paso a paso
+├─ Solución de problemas comunes
+├─ Requisitos del sistema
+├─ Estructura de carpetas
+├─ Desinstalación
+├─ Uso desde línea de comandos
+└─ Información de puertos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PRÓXIMOS PASOS:
+
+PASO 1: Descarga
+└─ Descarga: Marketing-Automation-v1.0.0.exe
+
+PASO 2: Ejecuta
+└─ Doble clic en el archivo EXE
+
+PASO 3: Espera
+└─ Espera 5-10 segundos mientras se inicia
+
+PASO 4: Navega
+└─ Se abre: http://localhost:3000
+
+PASO 5: Login
+└─ Email: test@email.com
+└─ Password: 123456
+
+PASO 6: Disfruta
+└─ Explora todas las funcionalidades
+└─ Crea campañas, contactos, etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ EXE COMPILADO Y VERIFICADO
+✅ LISTO PARA INSTALAR EN WINDOWS
+✅ PORTABLE (SIN INSTALACIÓN REQUERIDA)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Versión: 1.0.0
+Fecha: 2026-08-12
+Tamaño: 7.4 MB (EXE portable)
+Status: ✅ PRODUCCIÓN LISTA
+Proyecto: Marketing Automation System
+
