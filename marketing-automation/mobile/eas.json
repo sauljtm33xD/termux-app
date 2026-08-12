@@ -1,36 +1,13 @@
 {
   "cli": {
-    "version": ">= 5.4.0"
+    "version": ">= 21.0.0"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
+    "production": {
       "android": {
         "buildType": "apk"
       }
-    },
-    "production": {
-      "android": {
-        "buildType": "apk",
-        "image": "latest"
-      }
-    },
-    "local": {
-      "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      }
     }
   },
-  "submit": {
-    "production": {
-      "android": {
-        "serviceAccount": "~/.android/service-account.json",
-        "track": "internal"
-      }
-    }
-  }
+  "submit": {}
 }
