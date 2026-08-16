@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Clean Architecture</string>
-    <string name="title_main">Clean Architecture Example</string>
-    <string name="hint_consulta">Enter your query</string>
-    <string name="button_send">Send Query</string>
-    <string name="label_contador">Queries: %d</string>
-    <string name="label_respuesta">Response: %s</string>
-    <string name="label_error">Error: %s</string>
-    <string name="error_empty_consulta">Query cannot be empty</string>
-    <string name="error_network">Network error. Please try again.</string>
+    <string name="app_name">URU - AI Middleware</string>
+    <string name="app_description">Personal AI Middleware for Android</string>
+
+    <!-- Main UI -->
+    <string name="dashboard">Dashboard</string>
+    <string name="event_stream">Event Stream</string>
+    <string name="context_inspector">Context Inspector</string>
+    <string name="rule_engine">Rule Engine</string>
+    <string name="settings">Settings</string>
+
+    <!-- Events -->
+    <string name="publish_event">Publish Event</string>
+    <string name="topic">Topic</string>
+    <string name="payload">Payload</string>
+    <string name="send">Send</string>
+
+    <!-- Status -->
+    <string name="status_idle">Idle</string>
+    <string name="status_listening">Listening</string>
+    <string name="status_processing">Processing</string>
+    <string name="status_deciding">Deciding</string>
+    <string name="status_executing">Executing</string>
+
+    <!-- Metrics -->
+    <string name="events_dispatched">Events Dispatched</string>
+    <string name="avg_latency">Avg Latency</string>
+    <string name="peak_throughput">Peak Throughput</string>
+
+    <!-- Messages -->
+    <string name="welcome">Welcome to URU</string>
+    <string name="loading">Loading...</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    <string name="retry">Retry</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
