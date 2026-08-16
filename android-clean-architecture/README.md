@@ -1,10 +1,19 @@
-# Clean Architecture Android Project - MVVM + ViewBinding + Hilt
+# URU - Autonomous Personal AI Assistant for Android
 
-A production-ready, fully refactored Android application demonstrating Clean Architecture principles with complete separation of concerns, reactive data binding, and dependency injection.
+**URU** is a personal AI assistant that runs on Android with unprecedented security, privacy, and autonomy.
+
+Powered by:
+- **ARMA C30**: Clean Architecture (prevents prompt injection)
+- **ARMA C50**: Autonomous Core (smart autonomous decisions)
+- **AEGIS**: Security & Authorization System
 
 ## Project Overview
 
-This project transforms a legacy "God Activity" (150+ lines with AsyncTask, UI, business logic, and data access all mixed together) into a clean, testable, scalable architecture.
+URU is the intersection of security, autonomy, and AI. It demonstrates how to build a system that is:
+- **Unhackeable**: Clean architecture prevents prompt injection attacks
+- **Autonomous**: Makes intelligent decisions within strict security boundaries
+- **Private**: All data stays on device, never sent to servers
+- **Auditable**: Every action is logged and cryptographically signed
 
 ### Legacy Problems Solved
 
