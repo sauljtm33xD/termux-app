@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.uru.presentation.ui.theme.UruTheme
+import com.uru.presentation.ui.theme.UruThemeMode
+import com.uru.presentation.ui.theme.getUruColors
 import com.uru.presentation.viewmodel.AutonomyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -51,86 +55,47 @@ fun UruApp(
 ) {
     val autonomyState by viewModel.autonomyState.collectAsStateWithLifecycle()
     val metrics by viewModel.metrics.collectAsStateWithLifecycle()
+    val currentTheme by viewModel.currentTheme.collectAsStateWithLifecycle()
+    val cautionLevel by viewModel.cautionLevel.collectAsStateWithLifecycle()
+    val showKeywordDialog by viewModel.showKeywordDialog.collectAsStateWithLifecycle()
     val chatMessages = remember { mutableStateOf<List<ChatMessage>>(emptyList()) }
     var inputText by remember { mutableStateOf("") }
+    var keywordInput by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
+    var showThemeMenu by remember { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
 
-    MaterialTheme(
-        colorScheme = darkColorScheme(
-            primary = Color(0xFF6366F1),
-            secondary = Color(0xFF10B981),
-            background = Color(0xFF0F172A),
-            surface = Color(0xFF1E293B),
-            onSurface = Color(0xFFF1F5F9)
-        )
-    ) {
+    UruTheme(theme = currentTheme) {
+        val colors = getUruColors(currentTheme)
+
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF0F172A)),
-            color = Color(0xFF0F172A)
+                .background(colors.background),
+            color = colors.background
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // Header
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(70.dp),
-                    color = Color(0xFF1E293B)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.SmartToy,
-                                contentDescription = "URU",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(end = 12.dp),
-                                tint = Color(0xFF6366F1)
-                            )
-                            Column {
-                                Text(
-                                    text = "URU",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF6366F1)
-                                )
-                                Text(
-                                    text = autonomyState.toString(),
-                                    fontSize = 11.sp,
-                                    color = Color(0xFF10B981)
-                                )
-                            }
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Header with Theme & Settings
+                UruHeader(
+                    autonomyState = autonomyState,
+                    metrics = metrics,
+                    cautionLevel = cautionLevel,
+                    colors = colors,
+                    onThemeClick = { showThemeMenu = !showThemeMenu },
+                    onSettingsClick = { showSettings = !showSettings }
+                )
+
+                // Theme Selector
+                if (showThemeMenu) {
+                    ThemeSelector(
+                        currentTheme = currentTheme,
+                        colors = colors,
+                        onThemeSelected = { theme ->
+                            viewModel.setTheme(theme)
+                            showThemeMenu = false
                         }
-                        Row(
-                            modifier = Modifier.wrapContentWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "${metrics.eventsPublished} eventos",
-                                fontSize = 12.sp,
-                                color = Color(0xFF94A3B8)
-                            )
-                            Text(
-                                text = "${String.format("%.2f", metrics.avgDispatchLatencyMs)}ms",
-                                fontSize = 12.sp,
-                                color = Color(0xFF10B981)
-                            )
-                        }
-                    }
+                    )
                 }
 
                 // Chat Messages
@@ -143,7 +108,7 @@ fun UruApp(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(chatMessages.value) { message ->
-                        ChatBubble(message = message)
+                        ChatBubble(message = message, colors = colors)
                     }
                 }
 
@@ -151,8 +116,8 @@ fun UruApp(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF0F172A)),
-                    color = Color(0xFF0F172A)
+                        .background(colors.background),
+                    color = colors.background
                 ) {
                     Row(
                         modifier = Modifier
@@ -170,19 +135,19 @@ fun UruApp(
                             placeholder = {
                                 Text(
                                     "Escribe un comando o pregunta...",
-                                    color = Color(0xFF64748B),
+                                    color = colors.onSurface.copy(alpha = 0.5f),
                                     fontSize = 13.sp
                                 )
                             },
                             singleLine = false,
                             maxLines = 3,
                             colors = TextFieldDefaults.colors(
-                                focusedContainerColor = Color(0xFF1E293B),
-                                unfocusedContainerColor = Color(0xFF1E293B),
-                                focusedTextColor = Color(0xFFF1F5F9),
-                                unfocusedTextColor = Color(0xFFF1F5F9),
-                                focusedIndicatorColor = Color(0xFF6366F1),
-                                unfocusedIndicatorColor = Color(0xFF475569)
+                                focusedContainerColor = colors.surface,
+                                unfocusedContainerColor = colors.surface,
+                                focusedTextColor = colors.onSurface,
+                                unfocusedTextColor = colors.onSurface,
+                                focusedIndicatorColor = colors.primary,
+                                unfocusedIndicatorColor = colors.surface
                             ),
                             shape = RoundedCornerShape(8.dp)
                         )
@@ -205,12 +170,12 @@ fun UruApp(
                                         payload = mapOf("message" to inputText)
                                     )
 
-                                    val timestamp = System.currentTimeMillis()
                                     val latency = (Math.random() * 50).toFloat() + 10f
+                                    val cautiousness = if (cautionLevel > 70) "⚠️" else "✓"
 
                                     val uruResponse = ChatMessage(
                                         id = System.nanoTime().toString(),
-                                        text = "[URU - 100% Óptimo] Analicé tu input: \"$inputText\".\nEjecutada en sandbox local, validada con firma SHA-256 en ${String.format("%.2f", latency)}ms.",
+                                        text = "$cautiousness URU - Analicé tu input: \"$inputText\".\nEjecutada en sandbox local, validada con firma SHA-256 en ${String.format("%.2f", latency)}ms.",
                                         isUser = false,
                                         latencyMs = latency,
                                         signature = "sha256_${System.nanoTime().toString().take(16)}"
@@ -227,9 +192,7 @@ fun UruApp(
                             modifier = Modifier
                                 .height(48.dp)
                                 .width(48.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF6366F1)
-                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = colors.primary),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Icon(
@@ -243,33 +206,245 @@ fun UruApp(
                 }
             }
         }
+
+        // Keyword Verification Dialog
+        if (showKeywordDialog) {
+            KeywordDialog(
+                onSubmit = { keyword ->
+                    viewModel.verifyKeyword(keyword) { isValid ->
+                        if (isValid) {
+                            viewModel.onKeywordVerified()
+                        } else {
+                            viewModel.onKeywordFailed()
+                        }
+                    }
+                    if (keywordInput.isEmpty()) {
+                        viewModel.setKeywordHash(keyword)
+                    }
+                    keywordInput = ""
+                },
+                colors = colors,
+                keywordInput = keywordInput,
+                onKeywordChange = { keywordInput = it }
+            )
+        }
     }
 }
 
 @Composable
-fun ChatBubble(message: ChatMessage) {
+fun UruHeader(
+    autonomyState: Any,
+    metrics: Any,
+    cautionLevel: Int,
+    colors: com.uru.presentation.ui.theme.UruColors,
+    onThemeClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp),
+        color = colors.surface
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.SmartToy,
+                        contentDescription = "URU",
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(end = 8.dp),
+                        tint = colors.primary
+                    )
+                    Column {
+                        Text(
+                            text = "URU",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colors.primary
+                        )
+                        Text(
+                            text = autonomyState.toString(),
+                            fontSize = 10.sp,
+                            color = colors.secondary
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.wrapContentWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onThemeClick, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            imageVector = Icons.Filled.Palette,
+                            contentDescription = "Theme",
+                            tint = colors.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    IconButton(onClick = onSettingsClick, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint = colors.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+            }
+
+            // Metrics & Caution Level
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "⚠️ Precaución: $cautionLevel%",
+                    fontSize = 11.sp,
+                    color = if (cautionLevel > 70) colors.error else colors.secondary
+                )
+                LinearProgressIndicator(
+                    progress = { cautionLevel / 100f },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(4.dp),
+                    color = if (cautionLevel > 70) colors.error else colors.secondary,
+                    trackColor = colors.surface
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ThemeSelector(
+    currentTheme: UruThemeMode,
+    colors: com.uru.presentation.ui.theme.UruColors,
+    onThemeSelected: (UruThemeMode) -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        color = colors.surface,
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            listOf(UruThemeMode.FUEGO, UruThemeMode.AZUL_FRIO, UruThemeMode.AZUL_ELECTRICO).forEach { theme ->
+                val isSelected = theme == currentTheme
+                Button(
+                    onClick = { onThemeSelected(theme) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSelected) colors.primary else colors.surface
+                    )
+                ) {
+                    Text(
+                        text = theme.name.replace("_", " "),
+                        color = if (isSelected) Color.White else colors.onSurface
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun KeywordDialog(
+    onSubmit: (String) -> Unit,
+    colors: com.uru.presentation.ui.theme.UruColors,
+    keywordInput: String,
+    onKeywordChange: (String) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = {
+            Text(
+                text = "Palabra Clave de Conexión",
+                color = colors.primary,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Ingresa tu palabra clave personal para iniciar el protocolo",
+                    color = colors.onSurface,
+                    fontSize = 12.sp
+                )
+                TextField(
+                    value = keywordInput,
+                    onValueChange = onKeywordChange,
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Palabra clave...", color = colors.onSurface.copy(0.5f)) },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = colors.surface,
+                        unfocusedContainerColor = colors.surface,
+                        focusedTextColor = colors.onSurface,
+                        unfocusedTextColor = colors.onSurface,
+                        focusedIndicatorColor = colors.primary
+                    ),
+                    shape = RoundedCornerShape(4.dp)
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onSubmit(keywordInput) },
+                colors = ButtonDefaults.buttonColors(containerColor = colors.primary)
+            ) {
+                Text("Verificar", color = Color.White)
+            }
+        },
+        containerColor = colors.surface,
+        titleContentColor = colors.primary,
+        textContentColor = colors.onSurface
+    )
+}
+
+@Composable
+fun ChatBubble(
+    message: ChatMessage,
+    colors: com.uru.presentation.ui.theme.UruColors
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
     ) {
         Card(
-            modifier = Modifier
-                .widthIn(max = 300.dp)
-                .background(
-                    if (message.isUser) Color(0xFF6366F1) else Color(0xFF1E293B),
-                    shape = RoundedCornerShape(12.dp)
-                ),
+            modifier = Modifier.widthIn(max = 300.dp),
             colors = CardDefaults.cardColors(
-                containerColor = if (message.isUser) Color(0xFF6366F1) else Color(0xFF1E293B)
+                containerColor = if (message.isUser) colors.primary else colors.surface
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
+            Column(modifier = Modifier.padding(12.dp)) {
                 Text(
                     text = message.text,
-                    color = Color(0xFFF1F5F9),
+                    color = colors.onSurface,
                     fontSize = 13.sp,
                     lineHeight = 18.sp
                 )
@@ -282,12 +457,12 @@ fun ChatBubble(message: ChatMessage) {
                     ) {
                         Text(
                             text = "⏱ ${String.format("%.2f", message.latencyMs)}ms",
-                            color = Color(0xFF10B981),
+                            color = colors.secondary,
                             fontSize = 10.sp
                         )
                         Text(
                             text = message.signature.take(12),
-                            color = Color(0xFF94A3B8),
+                            color = colors.onSurface.copy(alpha = 0.6f),
                             fontSize = 9.sp
                         )
                     }
