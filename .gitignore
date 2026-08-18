@@ -1,61 +1,8 @@
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+node_modules/
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual environments
-venv/
-ENV/
-env/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+coverage/
 .DS_Store
-
-# Downloads folder
-Downloads/
-
-# Temporary files
-*.tmp
-*.temp
-
-# pytest
-.pytest_cache/
-.coverage
-htmlcov/
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre
-.pyre/
-
-# Project specific
-config.local.py
-downloads/*
-!downloads/.gitkeep
+*.log
+.env*
+!.env.example
