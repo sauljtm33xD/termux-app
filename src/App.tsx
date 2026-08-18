@@ -12,6 +12,7 @@ import { CoreEnginesStudio } from './components/CoreEnginesStudio';
 import { BuildDeployCenter } from './components/BuildDeployCenter';
 import { NewBornProtocolModal } from './components/NewBornProtocolModal';
 import { SystemInstructionsModal } from './components/SystemInstructionsModal';
+import { generateWithGemini, isGeminiConfigured } from './services/geminiService';
 import { 
   INITIAL_MESSAGES, 
   INITIAL_MEMORIES, 
@@ -132,21 +133,27 @@ export function App() {
     const startTime = Date.now();
 
     try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: content.trim(),
-          mode: currentMode,
-          history: messages.slice(-6),
-          memories,
-          telemetry: stats,
-          theme,
-          newBornState
-        })
-      });
+      // Build system prompt based on context
+      const systemPrompt = `Eres URU, un Personal AI Middleware inteligente para Termux.
+Modo: ${currentMode.toUpperCase()}
+Tema: ${theme}
+Recuerdos activos: ${memories.length}
 
-      const data = await response.json();
+Responde de forma breve, directa y útil. Si el usuario pregunta sobre tu capacidades, menciona que puedes:
+- Analizar código y sistemas
+- Proporcionar recomendaciones técnicas
+- Procesar eventos autónomos
+- Mantener contexto de conversación`;
+
+      const userPrompt = `${content.trim()}
+
+Contexto:
+- Modo autónomo: ${currentMode === 'autonomous' ? 'Sí' : 'No'}
+- Nivel de confianza: ${newBornState.trustLevel}%
+- Caution Level: ${newBornState.cautionLevel}`;
+
+      // Use Gemini API
+      const aiResponse = await generateWithGemini(userPrompt);
       const latency = Date.now() - startTime;
 
       const randomSignature = `sha256_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
@@ -154,12 +161,12 @@ export function App() {
       const assistantMessage: Message = {
         id: `msg-${Date.now()}-assistant`,
         role: 'assistant',
-        content: data.content || 'Sin respuesta generada por el motor.',
+        content: aiResponse,
         timestamp: new Date().toISOString(),
         mode: currentMode,
         auditSignature: randomSignature,
-        latencyMs: 0.08,
-        thoughts: data.thoughts || [
+        latencyMs: latency > 100 ? latency / 1000 : 0.08,
+        thoughts: [
           `Procesando en modo ${currentMode.toUpperCase()} bajo AEGIS Zero-Trust`,
           `Verificando políticas de autorización de URU Personal Middleware`,
           `Ejecución confirmada con firma ${randomSignature.slice(0, 16)}...`
@@ -175,7 +182,7 @@ export function App() {
         actor: 'gemini_service',
         action: 'TRIGGER_AI',
         topic: 'chat.message.response',
-        payload: { tokensUsed: data.tokensUsed || 320, mode: currentMode },
+        payload: { latencyMs: latency, mode: currentMode },
         riskScore: 15,
         riskLevel: 'MINIMAL',
         approved: true,
@@ -187,19 +194,18 @@ export function App() {
       setAuditLogs(prev => [newAudit, ...prev]);
 
       // Update telemetry
-      const addedTokens = data.tokensUsed || 350;
       setStats(prev => ({
         ...prev,
-        totalTokens: prev.totalTokens + addedTokens,
+        totalTokens: prev.totalTokens + 350,
         requestsCount: prev.requestsCount + 1,
         eventsProcessed: prev.eventsProcessed + 1,
-        averageLatencyMs: 0.08,
+        averageLatencyMs: (prev.averageLatencyMs + latency) / 2,
         neuralLoad: Math.min(95, Math.max(25, prev.neuralLoad + Math.floor(Math.random() * 6) - 2))
       }));
 
       // Speak if TTS enabled
       if (isTtsEnabled && 'speechSynthesis' in window) {
-        const clean = data.content.replace(/[*#`_\[\]()]/g, '');
+        const clean = aiResponse.replace(/[*#`_\[\]()]/g, '').substring(0, 500);
         const utt = new SpeechSynthesisUtterance(clean);
         utt.lang = 'es-ES';
         utt.rate = 1.05;
@@ -210,7 +216,7 @@ export function App() {
       const errorMessage: Message = {
         id: `msg-${Date.now()}-error`,
         role: 'assistant',
-        content: 'Hubo un error al procesar el mensaje con el middleware cognitivo.',
+        content: `❌ Error: ${error instanceof Error ? error.message : 'Error desconocido en la API de Gemini'}`,
         timestamp: new Date().toISOString(),
         mode: currentMode,
       };

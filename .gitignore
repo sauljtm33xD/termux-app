@@ -67,3 +67,4 @@ package-lock.json
 yarn.lock
 .vite/
 dist/
+.env
