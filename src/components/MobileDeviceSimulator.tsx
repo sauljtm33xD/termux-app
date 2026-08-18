@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { Message, AutonomousState, EmotionalState, UruTheme, NewBornState } from '../types';
 import { UruOrb } from './UruOrb';
-import { motion, AnimatePresence } from 'motion/react';
+// import { motion, AnimatePresence } from 'motion'; // TODO: Enable animations when motion/react is properly configured
 
 interface MobileDeviceSimulatorProps {
   messages: Message[];

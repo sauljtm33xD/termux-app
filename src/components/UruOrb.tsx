@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+// import { motion } from 'motion'; // TODO: Enable animations when motion/react is properly configured
 import { AutonomousState, EmotionalState, UruTheme } from '../types';
 import { Sparkles, Zap, Shield, Flame, Snowflake } from 'lucide-react';
 
