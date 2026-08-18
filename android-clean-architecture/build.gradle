@@ -19,6 +19,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "GEMINI_API_KEY", "\"${findProperty('GEMINI_API_KEY') ?: ''}\""
     }
 
     buildTypes {

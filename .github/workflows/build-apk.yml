@@ -36,11 +36,25 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x android-clean-architecture/gradlew
 
-      - name: Build Debug APK
-        run: cd android-clean-architecture && ./gradlew clean assembleDebug
+      - name: Build Debug APK with Gemini API
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          cd android-clean-architecture
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "⚠️  WARNING: GEMINI_API_KEY not configured in GitHub Secrets"
+            echo "ℹ️  Building with empty API key (will fail at runtime if Gemini features used)"
+          fi
+          ./gradlew clean assembleDebug \
+            -PGEMINI_API_KEY="$GEMINI_API_KEY"
 
-      - name: Build Release APK (unsigned)
-        run: cd android-clean-architecture && ./gradlew assembleRelease
+      - name: Build Release APK (unsigned) with Gemini API
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          cd android-clean-architecture
+          ./gradlew assembleRelease \
+            -PGEMINI_API_KEY="$GEMINI_API_KEY"
 
       - name: Upload Debug APK to Artifacts
         uses: actions/upload-artifact@v4

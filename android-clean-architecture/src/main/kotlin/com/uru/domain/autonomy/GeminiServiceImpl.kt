@@ -3,10 +3,26 @@ package com.uru.domain.autonomy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import com.uru.BuildConfig
 
 class GeminiServiceImpl(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 ) : IGeminiService {
+
+    private val apiKey: String = BuildConfig.GEMINI_API_KEY
+
+    init {
+        if (apiKey.isBlank()) {
+            android.util.Log.w(
+                "GeminiServiceImpl",
+                "⚠️  GEMINI_API_KEY is not configured. " +
+                "Gemini features will not work. " +
+                "Configure via GitHub Secrets: GEMINI_API_KEY"
+            )
+        } else {
+            android.util.Log.i("GeminiServiceImpl", "✅ Gemini API initialized (key length: ${apiKey.length})")
+        }
+    }
 
     override suspend fun synthesizeEvents(
         domain: String,
