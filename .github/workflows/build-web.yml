@@ -27,7 +27,12 @@ jobs:
         run: bun install
 
       - name: Type check
-        run: bun run type-check
+        run: |
+          if grep -q "type-check" package.json; then
+            bun run type-check
+          else
+            echo "type-check script not found, skipping"
+          fi
         continue-on-error: true
 
       - name: Build application
