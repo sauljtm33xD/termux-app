@@ -1,0 +1,82 @@
+name: Deploy URU Web App
+
+on:
+  push:
+    branches:
+      - claude/clean-architecture-mvvm-refactor-c77r5x
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build production bundle
+        run: bun run build
+        env:
+          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: uru-web-app
+          path: dist/
+          retention-days: 30
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'dist'
+
+      - name: Trigger GitHub Pages deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v2
+
+      - name: Create release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/**/*
+          tag_name: release-${{ github.run_number }}
+          body: |
+            ## URU Personal AI Middleware - Web App Release
+
+            Build: #${{ github.run_number }}
+            Commit: ${{ github.sha }}
+
+            ### What's included:
+            - Production-optimized React + TypeScript app
+            - Gemini AI API integration
+            - Responsive mobile design (Realme 16 Pro+ compatible)
+            - Spanish language support (es-ES)
+
+            ### Access:
+            - GitHub Pages: [https://sauljtm33xd.github.io/termux-app/]
+            - Local: `python -m http.server 8000` in dist/ folder
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
