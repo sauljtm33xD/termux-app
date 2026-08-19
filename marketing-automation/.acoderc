@@ -1,0 +1,41 @@
+{
+  "project": {
+    "name": "Marketing Automation System",
+    "version": "1.0.0",
+    "description": "Complete marketing automation platform for PC and Android"
+  },
+  "paths": {
+    "backend": "backend/app.py",
+    "web": "web/src/App.jsx",
+    "mobile": "mobile/App.js"
+  },
+  "tasks": {
+    "backend:run": "cd backend && python app.py",
+    "backend:install": "cd backend && pip install -r requirements.txt",
+    "web:build": "cd web && npm run build",
+    "web:start": "cd web && npm start",
+    "web:install": "cd web && npm install",
+    "mobile:build": "cd mobile && eas build --platform android",
+    "mobile:start": "cd mobile && npm start",
+    "mobile:install": "cd mobile && npm install"
+  },
+  "shortcuts": {
+    "Backend API": "backend/app.py",
+    "Web Dashboard": "web/src/App.jsx",
+    "Mobile App": "mobile/App.js",
+    "Database Models": "backend/app.py",
+    "Docs": "README.md"
+  },
+  "git": {
+    "branch": "claude/marketing-automation-setup-qyl1do",
+    "autoCommit": false,
+    "autoPush": false
+  },
+  "fileAssociations": {
+    "*.py": "python",
+    "*.jsx": "javascript",
+    "*.js": "javascript",
+    "*.json": "json",
+    "*.md": "markdown"
+  }
+}

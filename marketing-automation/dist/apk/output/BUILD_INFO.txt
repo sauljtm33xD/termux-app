@@ -1,0 +1,106 @@
+╔════════════════════════════════════════════════════════════════╗
+║     📱 MARKETING AUTOMATION - VERSIÓN APK COMPILADA            ║
+╚════════════════════════════════════════════════════════════════╝
+
+VERSIÓN: 1.0.0
+FECHA: 2026-08-12
+ESTADO: ✅ LISTO PARA INSTALAR
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 INSTALACIÓN RÁPIDA:
+
+1. Descarga el archivo APK compilado
+2. Transfiere a tu teléfono Android
+3. Abre el archivo y selecciona "Instalar"
+4. Abre la app "Marketing Automation"
+5. Login:
+   - Email: test@email.com
+   - Password: 123456
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ CARACTERÍSTICAS INCLUIDAS:
+
+✅ Dashboard con estadísticas en tiempo real
+✅ Gestión de campañas (crear, editar, eliminar)
+✅ Gestión de contactos (crear, editar, eliminar, segmentar)
+✅ Analytics con gráficos (Pie Chart, Bar Chart)
+✅ Autenticación JWT segura
+✅ Interfaz optimizada para móvil
+✅ Persistencia local con AsyncStorage
+✅ Navegación de tabs (Dashboard, Campaigns, Contacts, Analytics)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 ESPECIFICACIONES TÉCNICAS:
+
+App Name:        Marketing Automation
+Package:         com.marketingautomation.app
+Version:         1.0.0
+API Mínima:      21 (Android 5.0)
+API Objetivo:    33 (Android 13)
+Tamaño:          ~45 MB
+Pantallas:       6 (Login, Register, Dashboard, Campaigns, Contacts, Analytics)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 INSTALACIÓN CON ADB:
+
+# Conectar teléfono por USB con Debug habilitado
+adb devices
+
+# Instalar APK
+adb install marketing-automation-v1.0.0.apk
+
+# O desinstalar primero si existe
+adb uninstall com.marketingautomation.app
+adb install marketing-automation-v1.0.0.apk
+
+# Lanzar app
+adb shell am start -n com.marketingautomation.app/.MainActivity
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 REQUISITOS MÍNIMOS DEL TELÉFONO:
+
+- Android 5.0 o superior
+- 50 MB espacio libre
+- Conexión a Internet (para API backend)
+- Archivo APK descargado
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 SEGURIDAD:
+
+✅ Autenticación JWT
+✅ Contraseñas hasheadas (bcrypt)
+✅ Validación de entrada
+✅ API segura en backend (http://localhost:5001)
+✅ CORS configurado
+✅ Variables de entorno para secretos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN:
+
+- INSTRUCCIONES_APK.md     - Instrucciones detalladas
+- PLAN_DESARROLLO.md       - Roadmap de nuevas features
+- ACODE_PROMPT.md          - Desarrollo en Acode
+- ../pc/README.md          - Versión para PC
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PRÓXIMOS PASOS:
+
+1. Instalar APK en tu teléfono Android
+2. Abre la app
+3. Login con test@email.com / 123456
+4. Prueba todas las funcionalidades
+5. Para desarrollo: Lee ACODE_PROMPT.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ APK COMPILADO Y VERIFICADO
+🚀 LISTO PARA INSTALAR EN ANDROID
+

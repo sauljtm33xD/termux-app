@@ -1,0 +1,27 @@
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+.badge-draft {
+  background: #ecf0f1;
+  color: #34495e;
+}
+
+.badge-active {
+  background: #d5f4e6;
+  color: #27ae60;
+}
+
+.badge-completed {
+  background: #d6eaf8;
+  color: #3498db;
+}
+
+.badge-paused {
+  background: #fdeaa8;
+  color: #e67e22;
+}
