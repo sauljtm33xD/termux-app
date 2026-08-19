@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application' version '8.1.0'
-    id 'kotlin-android'
-    id 'dagger.hilt.android.plugin' version '2.50'
+    id 'org.jetbrains.kotlin.android' version '1.9.22'
+    id 'com.google.dagger.hilt.android' version '2.50'
     id 'kotlin-kapt'
 }
 
@@ -91,7 +91,7 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.6.1'
 
     // Google Generative AI (Gemini SDK)
-    implementation 'com.google.ai.client.generativeai:google-generativeai:0.2.1'
+    implementation 'com.google.ai.client.generativeai:generativeai:0.2.1'
 
     // TensorFlow Lite (On-device fallback)
     implementation 'org.tensorflow:tensorflow-lite:2.14.0'
