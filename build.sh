@@ -1,20 +1,21 @@
 #!/bin/bash
 
-echo "=========================================="
-echo "📱 APK Builder"
-echo "=========================================="
-echo ""
+# APK Builder - Automático
 
-read -p "📁 Ruta del proyecto: " PROJECT_DIR
-
-if [ -z "$PROJECT_DIR" ]; then
-    PROJECT_DIR="."
-fi
+PROJECT_DIR="${1:-.}"
 
 if [ ! -d "$PROJECT_DIR" ]; then
-    echo "❌ Carpeta no existe"
+    echo "❌ Carpeta no existe: $PROJECT_DIR"
     exit 1
 fi
+
+echo ""
+echo "========================================"
+echo "📱 APK Builder"
+echo "========================================"
+echo "Proyecto: $PROJECT_DIR"
+echo ""
+read -p "¿Compilar? (Enter para sí): " CONFIRM
 
 echo ""
 echo "Compilando..."
@@ -31,18 +32,12 @@ fi
 echo ""
 echo "Buscando APK..."
 
-APK_PATH=$(find . -name "app-debug.apk" -type f | head -1)
+APK=$(find . -name "app-debug.apk" -type f | head -1)
 
-if [ -z "$APK_PATH" ]; then
+if [ -z "$APK" ]; then
     echo "❌ APK no encontrado"
     exit 1
 fi
 
-echo "✓ APK encontrado: $APK_PATH"
-echo ""
-
-cp "$APK_PATH" "app.apk"
-
-echo "✓ Guardado como: app.apk"
-echo ""
-echo "✅ Listo"
+cp "$APK" "../app.apk"
+echo "✅ APK guardado en: ../app.apk"

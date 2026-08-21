@@ -6,25 +6,24 @@
 
 ## 🚀 Uso
 
-### Opción 1: Bash (Más simple)
+### Opción 1: Bash
 ```bash
 chmod +x build.sh
-./build.sh
+./build.sh .
 ```
 
 ### Opción 2: Python
 ```bash
-python3 apk_builder.py
+python3 apk_builder.py .
 ```
 
 ---
 
-## 📋 Pasos
+## 📋 3 Intervenciones del Usuario
 
-1. Ejecuta el script
-2. Introduce la ruta de tu proyecto Android
-3. Espera a que compile
-4. El APK se guarda como `app.apk`
+1. **Ejecutar**: `./build.sh .`
+2. **Confirmar**: Presiona Enter cuando pregunte
+3. **Listo**: APK descargado como `app.apk`
 
 ---
 

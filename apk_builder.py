@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""APK Builder - CLI Local"""
+"""APK Builder - Automático"""
 
 import subprocess
 import os
@@ -7,65 +7,44 @@ import shutil
 from pathlib import Path
 import sys
 
-class APKBuilder:
-    def __init__(self):
-        self.project_dir = None
-        self.apk_path = None
+PROJECT_DIR = sys.argv[1] if len(sys.argv) > 1 else "."
 
-    def run(self):
-        print("=" * 50)
-        print("📱 APK Builder")
-        print("=" * 50)
-        print()
+if not Path(PROJECT_DIR).exists():
+    print(f"❌ Carpeta no existe: {PROJECT_DIR}")
+    exit(1)
 
-        # Pedir ruta del proyecto
-        self.project_dir = input("📁 Ruta del proyecto: ").strip()
+print()
+print("=" * 40)
+print("📱 APK Builder")
+print("=" * 40)
+print(f"Proyecto: {PROJECT_DIR}")
+print()
+input("¿Compilar? (Enter para sí): ")
 
-        if not self.project_dir:
-            self.project_dir = "."
+print()
+print("Compilando...")
+print()
 
-        if not Path(self.project_dir).exists():
-            print("❌ Carpeta no existe")
-            return
+result = subprocess.run(
+    ["bash", "-c", f"cd {PROJECT_DIR} && ./gradlew assembleDebug"],
+    cwd=PROJECT_DIR
+)
 
-        print()
-        print("Compilando...")
-        print()
+if result.returncode != 0:
+    print("❌ Error en compilación")
+    exit(1)
 
-        try:
-            # Compilar
-            result = subprocess.run(
-                ["bash", "-c", f"cd {self.project_dir} && ./gradlew assembleDebug"],
-                capture_output=False
-            )
+print()
+print("Buscando APK...")
 
-            if result.returncode != 0:
-                print("❌ Error en compilación")
-                return
+apk_files = list(Path(PROJECT_DIR).glob("**/app-debug.apk"))
 
-            # Buscar APK
-            print()
-            print("Buscando APK...")
-            apk_files = list(Path(self.project_dir).glob("**/app-debug.apk"))
+if not apk_files:
+    print("❌ APK no encontrado")
+    exit(1)
 
-            if not apk_files:
-                print("❌ APK no encontrado")
-                return
+apk_path = apk_files[0]
+dest = Path("app.apk")
+shutil.copy(str(apk_path), str(dest))
 
-            self.apk_path = apk_files[0]
-            print(f"✓ APK encontrado: {self.apk_path}")
-            print()
-
-            # Copiar a directorio actual
-            dest = Path("app.apk")
-            shutil.copy(str(self.apk_path), str(dest))
-            print(f"✓ Guardado como: {dest}")
-            print()
-            print("✅ Listo")
-
-        except Exception as e:
-            print(f"❌ Error: {e}")
-
-if __name__ == "__main__":
-    builder = APKBuilder()
-    builder.run()
+print(f"✅ APK guardado en: {dest.resolve()}")
