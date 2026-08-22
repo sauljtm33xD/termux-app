@@ -13,9 +13,11 @@ import { BuildDeployCenter } from './components/BuildDeployCenter';
 import { NewBornProtocolModal } from './components/NewBornProtocolModal';
 import { SystemInstructionsModal } from './components/SystemInstructionsModal';
 import { generateWithGemini, isGeminiConfigured } from './services/geminiService';
-import { 
-  INITIAL_MESSAGES, 
-  INITIAL_MEMORIES, 
+import { isComplexTask, getComplexityScore } from './services/taskComplexityDetector';
+import { generateLocalResponse, hasLocalResponse } from './services/personalityEngine';
+import {
+  INITIAL_MESSAGES,
+  INITIAL_MEMORIES,
   INITIAL_STATS,
   INITIAL_NEW_BORN_STATE,
   INITIAL_AUDIT_LOGS,
@@ -133,27 +135,51 @@ export function App() {
     const startTime = Date.now();
 
     try {
-      // Build system prompt based on context
-      const systemPrompt = `Eres URU, un Personal AI Middleware inteligente para Termux.
+      let aiResponse: string;
+      let source: 'personality' | 'gemini' = 'personality';
+      let complexityScore = getComplexityScore(content.trim());
+
+      // Estrategia inteligente: Detectar complejidad
+      const isComplex = isComplexTask(content.trim());
+
+      if (!isComplex && hasLocalResponse(content.trim())) {
+        // Tarea simple: Usar Personality Engine (local, gratis, rápido)
+        const localResp = generateLocalResponse(content.trim());
+        aiResponse = localResp?.text || '✓ Procesado localmente.';
+        source = 'personality';
+      } else if (!isGeminiConfigured()) {
+        // No hay API key: Fallback a local
+        const localResp = generateLocalResponse(content.trim());
+        if (localResp) {
+          aiResponse = localResp.text;
+          source = 'personality';
+        } else {
+          aiResponse = '⚠️ GEMINI_API_KEY no configurada. Usa respuestas locales o configura el secret en GitHub.';
+          source = 'personality';
+        }
+      } else {
+        // Tarea compleja: Usar Gemini API
+        const systemPrompt = `Eres URU, un Personal AI Middleware inteligente.
 Modo: ${currentMode.toUpperCase()}
 Tema: ${theme}
-Recuerdos activos: ${memories.length}
+Recuerdos: ${memories.length}
 
-Responde de forma breve, directa y útil. Si el usuario pregunta sobre tu capacidades, menciona que puedes:
-- Analizar código y sistemas
-- Proporcionar recomendaciones técnicas
+Responde con profundidad. Puedes:
+- Analizar código y sistemas complejos
+- Proporcionar reasoning detallado
 - Procesar eventos autónomos
-- Mantener contexto de conversación`;
+- Mantener contexto`;
 
-      const userPrompt = `${content.trim()}
+        const userPrompt = `${content.trim()}
 
 Contexto:
-- Modo autónomo: ${currentMode === 'autonomous' ? 'Sí' : 'No'}
-- Nivel de confianza: ${newBornState.trustLevel}%
-- Caution Level: ${newBornState.cautionLevel}`;
+- Modo: ${currentMode}
+- Confianza: ${newBornState.trustLevel}%`;
 
-      // Use Gemini API
-      const aiResponse = await generateWithGemini(userPrompt);
+        aiResponse = await generateWithGemini(userPrompt);
+        source = 'gemini';
+      }
+
       const latency = Date.now() - startTime;
 
       const randomSignature = `sha256_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
@@ -179,12 +205,12 @@ Contexto:
       const newAudit: AegisAuditEntry = {
         id: `audit_${Date.now()}`,
         timestamp: Date.now(),
-        actor: 'gemini_service',
+        actor: source === 'gemini' ? 'gemini_service' : 'personality_engine',
         action: 'TRIGGER_AI',
-        topic: 'chat.message.response',
-        payload: { latencyMs: latency, mode: currentMode },
-        riskScore: 15,
-        riskLevel: 'MINIMAL',
+        topic: `chat.message.response.${source}`,
+        payload: { latencyMs: latency, mode: currentMode, source, complexity: complexityScore },
+        riskScore: source === 'gemini' ? 15 : 5,
+        riskLevel: source === 'gemini' ? 'MINIMAL' : 'NONE',
         approved: true,
         signature: randomSignature,
         previousHash: auditLogs[0]?.signature || 'genesis_hash',
