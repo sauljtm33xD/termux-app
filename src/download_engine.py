@@ -44,6 +44,7 @@ class DownloadTask:
         self.speed = 0.0
         self.last_update = 0
         self.last_downloaded = 0
+        self.remaining_time = 0
 
     async def get_file_size(self, session: aiohttp.ClientSession) -> int:
         try:
@@ -92,7 +93,7 @@ class DownloadEngine:
                 if self.config.resume_downloads and task.downloaded > 0:
                     headers['Range'] = f'bytes={task.downloaded}-'
 
-                async with session.get(self.url, headers=headers, timeout=aiohttp.ClientTimeout(total=None)) as resp:
+                async with session.get(task.url, headers=headers, timeout=aiohttp.ClientTimeout(total=None)) as resp:
                     if resp.status not in (200, 206):
                         task.status = DownloadStatus.ERROR
                         return
