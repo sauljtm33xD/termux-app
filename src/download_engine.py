@@ -117,14 +117,17 @@ class DownloadEngine:
                 else:
                     await self._simple_download(session, task)
 
-                task.temp_file.rename(task.output_path)
-                task.status = DownloadStatus.COMPLETED
-                if self.completed_callback:
-                    self.completed_callback(task)
+                if task.status == DownloadStatus.DOWNLOADING and task.temp_file.exists():
+                    task.temp_file.rename(task.output_path)
+                    task.status = DownloadStatus.COMPLETED
+                    if self.completed_callback:
+                        self.completed_callback(task)
 
             except Exception as e:
                 task.status = DownloadStatus.ERROR
                 print(f"Error downloading {task.filename}: {e}")
+                if task.temp_file.exists():
+                    task.temp_file.unlink()
 
     async def _simple_download(self, session: aiohttp.ClientSession, task: DownloadTask):
         headers = {}
@@ -152,8 +155,12 @@ class DownloadEngine:
         segment_size = self.config.segment_size
         num_segments = (task.total_size + segment_size - 1) // segment_size
 
-        async with aiofiles.open(task.temp_file, 'wb') as f:
-            await f.write(b'\x00' * task.total_size)
+        try:
+            async with aiofiles.open(task.temp_file, 'wb') as f:
+                await f.write(b'\x00' * task.total_size)
+        except Exception:
+            await self._simple_download(session, task)
+            return
 
         segments = []
         for i in range(num_segments):
