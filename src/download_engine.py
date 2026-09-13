@@ -29,7 +29,7 @@ class DownloadProgress:
     progress_percent: float
 
 class DownloadTask:
-    def __init__(self, url: str, filename: str, output_path: Path, max_connections: int = 4):
+    def __init__(self, url: str, filename: str, output_path: Path, max_connections: int = 16):
         self.url = url
         self.filename = filename
         self.output_path = output_path / filename
@@ -45,10 +45,12 @@ class DownloadTask:
         self.last_update = 0
         self.last_downloaded = 0
         self.remaining_time = 0
+        self.supports_range = False
 
     async def get_file_size(self, session: aiohttp.ClientSession) -> int:
         try:
-            async with session.head(self.url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+            async with session.head(self.url, timeout=aiohttp.ClientTimeout(total=15, connect=10)) as resp:
+                self.supports_range = 'accept-ranges' in resp.headers
                 return int(resp.headers.get('content-length', 0))
         except Exception:
             return 0
@@ -70,50 +72,50 @@ class DownloadEngine:
 
         async with aiohttp.ClientSession() as session:
             task.total_size = await task.get_file_size(session)
-
             if self.config.resume_downloads and task.temp_file.exists():
                 task.downloaded = task.temp_file.stat().st_size
 
         self.tasks.append(task)
         return task
 
+    async def _download_segment(self, session: aiohttp.ClientSession, task: DownloadTask, start: int, end: int, segment_id: int):
+        try:
+            headers = {'Range': f'bytes={start}-{end}'}
+            async with session.get(task.url, headers=headers, timeout=aiohttp.ClientTimeout(total=None, connect=self.config.timeout)) as resp:
+                if resp.status not in (206, 200):
+                    return
+
+                async with aiofiles.open(task.temp_file, 'r+b') as f:
+                    await f.seek(start)
+                    async for chunk in resp.content.iter_chunked(self.config.chunk_size):
+                        if task.cancelled:
+                            return
+                        await f.write(chunk)
+                        task.downloaded += len(chunk)
+                        await self._update_progress(task)
+        except Exception as e:
+            print(f"Segment {segment_id} error: {e}")
+
     async def download_file(self, task: DownloadTask):
         task.status = DownloadStatus.DOWNLOADING
         task.start_time = time.time()
 
         connector = aiohttp.TCPConnector(
-            limit_per_host=task.max_connections,
+            limit_per_host=self.config.max_parallel_connections,
+            limit=self.config.max_parallel_connections * 2,
             force_close=False,
-            enable_cleanup_closed=True
+            enable_cleanup_closed=True,
+            use_dns_cache=True,
+            ttl_dns_cache=300,
+            keepalive_timeout=30
         )
 
         async with aiohttp.ClientSession(connector=connector) as session:
             try:
-                headers = {}
-                if self.config.resume_downloads and task.downloaded > 0:
-                    headers['Range'] = f'bytes={task.downloaded}-'
-
-                async with session.get(task.url, headers=headers, timeout=aiohttp.ClientTimeout(total=None)) as resp:
-                    if resp.status not in (200, 206):
-                        task.status = DownloadStatus.ERROR
-                        return
-
-                    async with aiofiles.open(task.temp_file, 'ab') as f:
-                        async for chunk in resp.content.iter_chunked(self.config.chunk_size):
-                            if task.cancelled:
-                                task.status = DownloadStatus.CANCELLED
-                                return
-
-                            if task.paused:
-                                while task.paused and not task.cancelled:
-                                    await asyncio.sleep(0.1)
-
-                            await f.write(chunk)
-                            task.downloaded += len(chunk)
-                            await self._update_progress(task)
-
-                            if self.config.max_bandwidth:
-                                await self._rate_limit(task)
+                if task.supports_range and task.total_size > self.config.segment_size and self.config.enable_segmented:
+                    await self._segmented_download(session, task)
+                else:
+                    await self._simple_download(session, task)
 
                 task.temp_file.rename(task.output_path)
                 task.status = DownloadStatus.COMPLETED
@@ -124,12 +126,58 @@ class DownloadEngine:
                 task.status = DownloadStatus.ERROR
                 print(f"Error downloading {task.filename}: {e}")
 
+    async def _simple_download(self, session: aiohttp.ClientSession, task: DownloadTask):
+        headers = {}
+        if self.config.resume_downloads and task.downloaded > 0:
+            headers['Range'] = f'bytes={task.downloaded}-'
+
+        async with session.get(task.url, headers=headers, timeout=aiohttp.ClientTimeout(total=None)) as resp:
+            if resp.status not in (200, 206):
+                task.status = DownloadStatus.ERROR
+                return
+
+            async with aiofiles.open(task.temp_file, 'ab') as f:
+                async for chunk in resp.content.iter_chunked(self.config.chunk_size):
+                    if task.cancelled:
+                        task.status = DownloadStatus.CANCELLED
+                        return
+                    if task.paused:
+                        while task.paused and not task.cancelled:
+                            await asyncio.sleep(0.1)
+                    await f.write(chunk)
+                    task.downloaded += len(chunk)
+                    await self._update_progress(task)
+
+    async def _segmented_download(self, session: aiohttp.ClientSession, task: DownloadTask):
+        segment_size = self.config.segment_size
+        num_segments = (task.total_size + segment_size - 1) // segment_size
+
+        async with aiofiles.open(task.temp_file, 'wb') as f:
+            await f.write(b'\x00' * task.total_size)
+
+        segments = []
+        for i in range(num_segments):
+            start = i * segment_size
+            end = min((i + 1) * segment_size - 1, task.total_size - 1)
+            segments.append((start, end, i))
+
+        semaphore = asyncio.Semaphore(self.config.max_parallel_connections)
+
+        async def download_with_semaphore(start, end, seg_id):
+            async with semaphore:
+                await self._download_segment(session, task, start, end, seg_id)
+
+        download_tasks = [download_with_semaphore(start, end, seg_id) for start, end, seg_id in segments]
+        await asyncio.gather(*download_tasks)
+
     async def _update_progress(self, task: DownloadTask):
         now = time.time()
-        if now - task.last_update >= 0.5:
+        if now - task.last_update >= 0.2:
             elapsed = now - task.start_time
             downloaded_since_last = task.downloaded - task.last_downloaded
-            task.speed = (downloaded_since_last / (now - task.last_update)) if (now - task.last_update) > 0 else 0
+            time_delta = now - task.last_update
+
+            task.speed = (downloaded_since_last / time_delta) if time_delta > 0 else 0
 
             if task.speed > 0:
                 remaining = task.total_size - task.downloaded
@@ -151,10 +199,6 @@ class DownloadEngine:
 
             task.last_update = now
             task.last_downloaded = task.downloaded
-
-    async def _rate_limit(self, task: DownloadTask):
-        if self.config.max_bandwidth:
-            await asyncio.sleep(0.01)
 
     async def start_downloads(self):
         tasks = [self.download_file(task) for task in self.tasks if task.status == DownloadStatus.PENDING]
