@@ -1,11 +1,16 @@
 package com.uru.domain.autonomy
 
+import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.*
 import kotlin.math.min
+
+private const val TAG = "EventEngine"
+private const val MAX_DLQ_SIZE = 1000
+private const val MAX_SUBSCRIPTION_OVERHEAD = 10000
 
 class EventEngineImpl(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -94,7 +99,12 @@ class EventEngineImpl(
         subscriptionMutex.withLock {
             val subscription = subscriptions.remove(subscriptionId)
             subscription?.let {
-                subscriptionsByTopic[it.topic]?.remove(subscriptionId)
+                subscriptionsByTopic[it.topic]?.let { topicSet ->
+                    topicSet.remove(subscriptionId)
+                    if (topicSet.isEmpty()) {
+                        subscriptionsByTopic.remove(it.topic)
+                    }
+                }
             }
         }
 
@@ -246,6 +256,10 @@ class EventEngineImpl(
                 }
 
                 dlqMutex.withLock {
+                    if (deadLetterQueue.size >= MAX_DLQ_SIZE) {
+                        Log.w(TAG, "DLQ at max size ($MAX_DLQ_SIZE), removing oldest entry")
+                        deadLetterQueue.removeAt(0)
+                    }
                     val dlqEntry = DeadLetterEntry(
                         eventId = event.id,
                         event = event,
@@ -331,6 +345,10 @@ class EventEngineImpl(
         }
 
         dlqMutex.withLock {
+            if (deadLetterQueue.size >= MAX_DLQ_SIZE) {
+                Log.w(TAG, "DLQ at max size ($MAX_DLQ_SIZE), removing oldest entry")
+                deadLetterQueue.removeAt(0)
+            }
             val dlqEntry = DeadLetterEntry(
                 eventId = event.id,
                 event = event,

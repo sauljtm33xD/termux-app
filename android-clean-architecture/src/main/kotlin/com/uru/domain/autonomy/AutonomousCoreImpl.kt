@@ -1,11 +1,15 @@
 package com.uru.domain.autonomy
 
+import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+
+private const val TAG = "AutonomousCore"
 
 class AutonomousCoreImpl(
     private val config: AutonomousCoreConfig = AutonomousCoreConfig(),
@@ -22,7 +26,7 @@ class AutonomousCoreImpl(
     private val stateFlow = MutableStateFlow(AutonomousState.IDLE)
     private val processingMutex = Mutex()
     private val auditLog = mutableListOf<AuditEntry>()
-    private val auditLogMutex = Mutex()
+    private val stateAuditLock = Mutex()
 
     private var processingJob: Job? = null
     private var isRunning = false
@@ -45,7 +49,7 @@ class AutonomousCoreImpl(
 
             override fun beforePublish(event: EngineEvent<*>): EngineEvent<*> {
                 externalScope.launch {
-                    auditLogMutex.withLock {
+                    stateAuditLock.withLock {
                         auditLog.add(
                             AuditEntry(
                                 state = stateFlow.value,
@@ -97,7 +101,7 @@ class AutonomousCoreImpl(
 
                         val result = actionEngine.execute(action, actionContext)
 
-                        auditLogMutex.withLock {
+                        stateAuditLock.withLock {
                             auditLog.add(
                                 AuditEntry(
                                     state = AutonomousState.EXECUTING,
@@ -152,19 +156,28 @@ class AutonomousCoreImpl(
     }
 
     private suspend fun processingLoop() {
-        while (isRunning && isActive) {
-            delay(100)
-
+        try {
             if (config.enableTimeTravel) {
-                captureSnapshot()
+                eventEngine.observeEvents().collect { event ->
+                    try {
+                        captureSnapshot()
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to capture snapshot for event ${event.id}", e)
+                    }
+                }
+            } else {
+                delay(Long.MAX_VALUE)
             }
+        } catch (e: CancellationException) {
+            Log.d(TAG, "Processing loop cancelled")
+        } catch (e: Exception) {
+            Log.e(TAG, "Unexpected error in processing loop", e)
         }
     }
 
     private suspend fun emitState(state: AutonomousState) {
-        stateFlow.emit(state)
-
-        auditLogMutex.withLock {
+        stateAuditLock.withLock {
+            stateFlow.emit(state)
             auditLog.add(
                 AuditEntry(
                     state = state,
@@ -176,29 +189,34 @@ class AutonomousCoreImpl(
     }
 
     private suspend fun captureSnapshot() {
-        try {
-            val eventState = eventEngine.observeEvents().replayCache
-            val contextState = (1..10).associate { i ->
-                "scope_$i" to ContextScope(
-                    id = "scope_$i",
-                    name = "Scope $i",
-                    variables = emptyMap()
-                )
-            }
-            val metrics = eventEngine.getMetrics()
+        repeat(3) { attempt ->
+            try {
+                val eventState = eventEngine.observeEvents().replayCache
+                val contextState = (1..10).associate { i ->
+                    "scope_$i" to ContextScope(
+                        id = "scope_$i",
+                        name = "Scope $i",
+                        variables = emptyMap()
+                    )
+                }
+                val metrics = eventEngine.getMetrics()
 
-            replayEngine.captureSnapshot(
-                eventState = eventState.toList(),
-                contextState = contextState,
-                metrics = metrics
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
+                replayEngine.captureSnapshot(
+                    eventState = eventState.toList(),
+                    contextState = contextState,
+                    metrics = metrics
+                )
+                Log.d(TAG, "Snapshot captured successfully")
+                return@repeat
+            } catch (e: Exception) {
+                Log.w(TAG, "Snapshot capture failed (attempt ${attempt + 1}/3)", e)
+                if (attempt < 2) delay(100L * (attempt + 1))
+            }
         }
     }
 
     suspend fun getAuditLog(): List<AuditEntry> {
-        auditLogMutex.withLock {
+        stateAuditLock.withLock {
             return auditLog.toList()
         }
     }
