@@ -1,4 +1,4 @@
-package com.autonomy.engine.presentation.ui
+package com.uru.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,8 +19,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.autonomy.engine.data.*
-import com.autonomy.engine.domain.*
+import com.uru.domain.autonomy.*
 
 /**
  * Modern Jetpack Compose UI Dashboard for Android Autonomy Engine.

@@ -1,4 +1,4 @@
-package com.autonomy.engine.data
+package com.uru.domain.autonomy
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,7 +13,6 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.BatteryManager
-import com.autonomy.engine.domain.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
