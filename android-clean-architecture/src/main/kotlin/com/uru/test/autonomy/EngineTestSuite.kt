@@ -1,7 +1,6 @@
-package com.autonomy.engine.test
+package com.uru.test.autonomy
 
-import com.autonomy.engine.data.*
-import com.autonomy.engine.domain.*
+import com.uru.domain.autonomy.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*

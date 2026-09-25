@@ -1,8 +1,7 @@
-package com.autonomy.engine.di
+package com.uru.di
 
 import android.content.Context
-import com.autonomy.engine.data.*
-import com.autonomy.engine.domain.*
+import com.uru.domain.autonomy.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

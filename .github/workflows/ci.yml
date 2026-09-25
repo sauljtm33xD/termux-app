@@ -31,13 +31,12 @@ jobs:
         run: bun install
 
       - name: Type check
-        run: bun run type-check || true
-        continue-on-error: true
+        run: bun run type-check
 
       - name: Build production
         run: bun run build
         env:
-          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'test-key' }}
+          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Verify build output
         run: |
