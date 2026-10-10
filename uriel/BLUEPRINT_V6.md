@@ -50,6 +50,21 @@ Lo que usan Chrome, Erlang y systemd es esto:
 
 ---
 
+## Bitácora de auditoría inmutable (`uriel/native/audit_log.hpp`)
+
+Reemplaza el `ImmutableAuditEngine` propuesto. Antes de cambiarlo se compiló y se probó tal cual, y falló en tres casos:
+
+| Prueba | Original | v6 |
+|--------|----------|----|
+| 4 hilos × 900 escrituras | La cadena se rompe y el motor se bloquea para siempre | Cadena válida, 3600 registros |
+| Escritura #4097 | Se cuelga: el ring buffer nunca libera slots | Sin límite (10,600 en el test) |
+| Reescribir un registro y recalcular la cadena | **No se detecta**: SHA-256 sin llave | Rechazado: HMAC-SHA256 con llave |
+
+Además: se guarda en disco append-only (`O_APPEND | O_CLOEXEC | O_NOFOLLOW`, permisos 0600) y sobrevive a reinicios.
+La llave vive en `SecureBuffer` y la comparación es en tiempo constante.
+`head()` permite anclar el último MAC fuera del dispositivo, porque borrar registros del final solo se detecta así.
+Velocidad medida en x86_64: unos 310k registros/s sin fsync y unos 2.6k/s con `fdatasync`.
+
 ## Matriz C1–C10: estado real
 
 | Capa | Estado |
