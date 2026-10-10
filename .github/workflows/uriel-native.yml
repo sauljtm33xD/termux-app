@@ -1,0 +1,48 @@
+name: URIEL native tests
+
+on:
+  push:
+    paths:
+      - "uriel/**"
+      - ".github/workflows/uriel-native.yml"
+  pull_request:
+    paths:
+      - "uriel/**"
+      - ".github/workflows/uriel-native.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.cxx }} ${{ matrix.sanitize || 'plain' }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { cxx: g++,     sanitize: "" }
+          - { cxx: clang++, sanitize: "" }
+          - { cxx: g++,     sanitize: address }
+          - { cxx: g++,     sanitize: thread }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libssl-dev cmake
+
+      # Los kernels recientes de los runners usan más bits de ASLR de los que TSan soporta.
+      - name: Reduce ASLR entropy for TSan
+        if: matrix.sanitize == 'thread'
+        run: sudo sysctl vm.mmap_rnd_bits=28
+
+      - name: Configure
+        env:
+          CXX: ${{ matrix.cxx }}
+        run: cmake -S uriel/native -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DURIEL_SANITIZE=${{ matrix.sanitize }}
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
