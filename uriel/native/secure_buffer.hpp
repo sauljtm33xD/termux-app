@@ -16,11 +16,14 @@
 namespace uriel {
 
 inline void secure_zero(void* p, size_t n) noexcept {
-#if defined(__GLIBC__) || defined(__BIONIC__)
+#if defined(__GLIBC__)
     explicit_bzero(p, n);
 #else
+    // bionic (Android) no tiene explicit_bzero: escritura volátil + barrera para que el
+    // compilador no elimine el borrado.
     volatile unsigned char* v = static_cast<volatile unsigned char*>(p);
     while (n--) *v++ = 0;
+    __asm__ __volatile__("" : : "r"(p) : "memory");
 #endif
 }
 
