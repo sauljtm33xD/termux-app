@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   test:
-    name: ${{ matrix.cxx }} ${{ matrix.sanitize || 'plain' }}
+    name: ${{ matrix.cxx }} ${{ matrix.sanitize || 'plain' }}${{ matrix.onnx && ' onnx' || '' }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -25,21 +25,27 @@ jobs:
           - { cxx: clang++, sanitize: "" }
           - { cxx: g++,     sanitize: address }
           - { cxx: g++,     sanitize: thread }
+          - { cxx: g++,     sanitize: "", onnx: true }
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libssl-dev cmake
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libssl-dev cmake python3-venv unzip
 
       # Los kernels recientes de los runners usan más bits de ASLR de los que TSan soporta.
       - name: Reduce ASLR entropy for TSan
         if: matrix.sanitize == 'thread'
         run: sudo sysctl vm.mmap_rnd_bits=28
 
+      - name: Fetch ONNX Runtime
+        if: matrix.onnx
+        run: uriel/tools/fetch_onnxruntime.sh "$RUNNER_TEMP/ort"
+
       - name: Configure
         env:
           CXX: ${{ matrix.cxx }}
-        run: cmake -S uriel/native -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DURIEL_SANITIZE=${{ matrix.sanitize }}
+          ONNX_FLAGS: ${{ matrix.onnx && format('-DURIEL_WITH_ONNX=ON -DONNXRUNTIME_ROOT={0}/ort', runner.temp) || '' }}
+        run: cmake -S uriel/native -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DURIEL_SANITIZE=${{ matrix.sanitize }} $ONNX_FLAGS
 
       - name: Build
         run: cmake --build build -j"$(nproc)"

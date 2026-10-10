@@ -11,7 +11,10 @@ Rama: `ccr-5c85ea34-b4kbzm` · PR: https://github.com/sauljtm33xD/termux-app/pul
 | [`native/secure_buffer.hpp`](native/secure_buffer.hpp) | Memoria para secretos: páginas guarda, sin core dumps, borrada al fork, `mlock`, zeroize y comparación en tiempo constante | Probado |
 | [`native/audit_log.hpp`](native/audit_log.hpp) | Bitácora append-only con cadena HMAC-SHA256, en disco, thread-safe, con `head()` para anclar fuera del dispositivo | Probado |
 | [`native/vector_memory.hpp`](native/vector_memory.hpp) | Memoria vectorial local: embeddings, búsqueda por similitud coseno, persistencia validada y hook de auditoría | Probado |
-| [`native/*_test.cpp`](native/) | Pruebas que intentan romper cada módulo (hilos, límites, datos alterados, archivos corruptos) | 3/3 pasan |
+| [`native/onnx_embedder.hpp`](native/onnx_embedder.hpp) | Embeddings semánticos con ONNX Runtime (tipo MiniLM): mean pooling con máscara y norma L2. Tokenizer detrás de una interfaz | Probado con modelos de prueba; falta MiniLM real |
+| [`tools/fetch_onnxruntime.sh`](tools/fetch_onnxruntime.sh) | Descarga ONNX Runtime oficial (PyPI + headers del AAR de Maven, con SHA-1) | Probado |
+| [`tools/make_test_models.py`](tools/make_test_models.py) / [`native/testdata/`](native/testdata/) | Modelos ONNX diminutos con la interfaz de MiniLM, para las pruebas | Listo |
+| [`native/*_test.cpp`](native/) | Pruebas que intentan romper cada módulo (hilos, límites, datos alterados, archivos corruptos) | 4/4 pasan (con ONNX) |
 | [`native/CMakeLists.txt`](native/CMakeLists.txt) | Compilación y pruebas, con opción de sanitizers (`-DURIEL_SANITIZE=address\|thread`) | Listo |
 | [`../.github/workflows/uriel-native.yml`](../.github/workflows/uriel-native.yml) | CI: g++, clang++, ASan+UBSan y TSan en cada push | Listo; GitHub Actions de la cuenta no ejecuta jobs (revisar Billing) |
 | [`../termux-shared/src/main/cpp/local-socket.cpp`](../termux-shared/src/main/cpp/local-socket.cpp) | App Termux: sockets con `SOCK_CLOEXEC`, `accept4`, `snprintf` (capa C5) | Revisión de sintaxis; sin build NDK completo |
@@ -67,9 +70,10 @@ mem.save("memoria.urvm");
 
 ## Pendiente
 
-1. **MiniLM en la memoria vectorial.** Bloqueado: la red del entorno de Claude no permite `huggingface.co`.
-   Modelo elegido: `paraphrase-multilingual-MiniLM-L12-v2` (384 dimensiones, entiende español).
-   `all-MiniLM-L6-v2` está entrenado en inglés.
+1. **MiniLM en la memoria vectorial.** `OnnxEmbedder` ya está hecho y probado. Faltan el modelo real
+   `paraphrase-multilingual-MiniLM-L12-v2` (384 dimensiones, entiende español) y su tokenizer (SentencePiece),
+   ambos en Hugging Face, que la red de esta sesión todavía rechaza.
+   Con ONNX: `uriel/tools/fetch_onnxruntime.sh ort && cmake -S uriel/native -B build -DURIEL_WITH_ONNX=ON -DONNXRUNTIME_ROOT=ort`
 2. **Llave HMAC en Android Keystore/StrongBox**, para que ni la propia app pueda extraerla.
 3. **Puente JNI** hacia `AuditLog` y `VectorMemory`, cuando se decida en qué app vive.
 4. **CI en GitHub:** resolver Billing/minutos de Actions en la cuenta.

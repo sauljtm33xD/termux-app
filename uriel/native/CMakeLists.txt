@@ -36,3 +36,21 @@ endfunction()
 uriel_test(secure_buffer_test)
 uriel_test(audit_log_test)
 uriel_test(vector_memory_test)
+
+# Embeddings semánticos con ONNX Runtime (opcional).
+#   -DURIEL_WITH_ONNX=ON -DONNXRUNTIME_ROOT=<carpeta con include/ y lib/>
+option(URIEL_WITH_ONNX "Build OnnxEmbedder and its tests" OFF)
+if(URIEL_WITH_ONNX)
+    set(ONNXRUNTIME_ROOT "" CACHE PATH "ONNX Runtime install root (include/, lib/)")
+    find_path(ORT_INCLUDE onnxruntime_cxx_api.h PATHS ${ONNXRUNTIME_ROOT}/include NO_DEFAULT_PATH REQUIRED)
+    find_library(ORT_LIB onnxruntime PATHS ${ONNXRUNTIME_ROOT}/lib NO_DEFAULT_PATH REQUIRED)
+    add_executable(onnx_embedder_test onnx_embedder_test.cpp)
+    # Los headers de ONNX Runtime no compilan limpios con -Wpedantic.
+    target_include_directories(onnx_embedder_test SYSTEM PRIVATE ${ORT_INCLUDE})
+    target_link_libraries(onnx_embedder_test PRIVATE ${ORT_LIB} Threads::Threads)
+    add_test(NAME onnx_embedder_test
+             COMMAND onnx_embedder_test ${CMAKE_CURRENT_SOURCE_DIR}/testdata ${CMAKE_CURRENT_BINARY_DIR})
+    set_tests_properties(onnx_embedder_test PROPERTIES
+        ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0;TSAN_OPTIONS=halt_on_error=1"
+        TIMEOUT 120)
+endif()
