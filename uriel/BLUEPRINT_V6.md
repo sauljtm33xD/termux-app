@@ -65,6 +65,20 @@ La llave vive en `SecureBuffer` y la comparación es en tiempo constante.
 `head()` permite anclar el último MAC fuera del dispositivo, porque borrar registros del final solo se detecta así.
 Velocidad medida en x86_64: unos 310k registros/s sin fsync y unos 2.6k/s con `fdatasync`.
 
+## Memoria vectorial local (`uriel/native/vector_memory.hpp`)
+
+Es el "eco" en forma real: cada texto se convierte en un vector de norma 1, y recordar es buscar por similitud coseno.
+
+- **Sin dependencias**: biblioteca estándar y POSIX, compila igual en Linux y NDK.
+- **`HashingEmbedder`** (por defecto, 512 dimensiones): palabras, pares de palabras y trigramas de letras.
+  No distingue mayúsculas ni acentos ("Saúl" = "saul"), conserva la ñ ("año" ≠ "ano") e ignora palabras vacías del español.
+  **Es léxico, no semántico**: encuentra "memorias" con "memoria", pero no "mascota" con "perro".
+  Para eso se conecta un modelo (p. ej. MiniLM) implementando `Embedder`, sin tocar el resto.
+- **Persistencia atómica** (temporal + fsync + rename, permisos 0600). Al cargar valida CRC, firma, versión, embedder, dimensión, tamaños, ids repetidos y floats no finitos; si algo falla, la memoria queda intacta.
+- **Concurrencia**: lectores en paralelo, escritores con prioridad para evitar inanición.
+- **Integración con AuditLog** por `set_audit_hook()`: cada alta y baja queda en la cadena HMAC (la prueba registra el SHA-256 del texto, no el texto).
+- Medido en x86_64: 20,000 recuerdos se indexan en 0.25 s, cada búsqueda tarda unos 29 ms y los vectores ocupan unos 41 MB.
+
 ## Matriz C1–C10: estado real
 
 | Capa | Estado |

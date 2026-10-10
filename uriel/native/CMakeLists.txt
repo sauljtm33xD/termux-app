@@ -35,3 +35,4 @@ endfunction()
 
 uriel_test(secure_buffer_test)
 uriel_test(audit_log_test)
+uriel_test(vector_memory_test)
