@@ -23,7 +23,7 @@
  ],
  "bluesky": [
   {
-   "texto": "Armé el Termux Pack Completo: un comando instala 7 herramientas (QR para compartir carpetas, respaldo, limpieza...), más cheatsheet PDF y 40 prompts para programar con IA. Todo en español, $100 MXN: {LINK} {AVISO}"
+   "texto": "Termux Pack Completo: instalador de 1 comando + cheatsheet PDF + 40 prompts para programar con IA. En español, $100 MXN: {LINK} {AVISO}"
   },
   {
    "texto": "Truco gratis de Termux: comparte una carpeta por Wi-Fi con QR → qrencode + python -m http.server. Dejé este y 6 scripts más listos en un instalador: {LINK} {AVISO}"
