@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+set -euo pipefail
+[ -d /sdcard ] || { echo "Ejecuta termux-setup-storage primero."; exit 1; }
+out=/sdcard/termux-backups
+mkdir -p "$out"
+file="$out/termux-home-$(date +%Y%m%d-%H%M%S).tar.gz"
+tar -czf "$file" -C "$HOME" --exclude='.cache' --exclude='storage' .
+echo "Respaldo creado: $file ($(du -h "$file" | cut -f1))"

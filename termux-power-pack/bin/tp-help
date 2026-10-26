@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+cat <<'T'
+Termux Power Pack - comandos
+  tp-sysinfo        Resumen de bateria, memoria, disco y red
+  tp-ip             IP local y publica
+  tp-serve [dir]    Comparte una carpeta por Wi-Fi con QR
+  tp-backup         Respalda $HOME a /sdcard/termux-backups
+  tp-clean          Limpia cache de paquetes y temporales
+  tp-note "texto"   Guarda una nota con fecha (tp-note sin texto: la lista)
+T

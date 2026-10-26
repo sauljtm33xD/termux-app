@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+echo "== Bateria =="; (termux-battery-status 2>/dev/null | jq -r '"\(.percentage)% - \(.status)"') || echo "instala la app Termux:API"
+echo "== Memoria =="; free -h | awk 'NR<=2'
+echo "== Disco =="; df -h "$HOME" | awk 'NR>1{print $3" usados de "$2" ("$5")"}'
+echo "== Red =="; tp-ip
