@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+f="$HOME/.tp-notes"
+if [ $# -eq 0 ]; then cat -n "$f" 2>/dev/null || echo "Sin notas."; else echo "$(date '+%F %H:%M') $*" >> "$f"; echo "Nota guardada."; fi

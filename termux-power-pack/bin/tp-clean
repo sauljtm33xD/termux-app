@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+before=$(du -sk "$PREFIX" "$HOME" 2>/dev/null | awk '{s+=$1} END{print s}')
+pkg clean -y >/dev/null 2>&1 || apt clean
+rm -rf "$HOME/.cache" "$TMPDIR"/* 2>/dev/null || true
+after=$(du -sk "$PREFIX" "$HOME" 2>/dev/null | awk '{s+=$1} END{print s}')
+echo "Liberado: $(( (before - after) / 1024 )) MB"

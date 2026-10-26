@@ -1,0 +1,9 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+dir="${1:-.}"
+port="${2:-8080}"
+ip=$(ip -4 addr show wlan0 2>/dev/null | awk '/inet /{sub("/.*","",$2);print $2}')
+[ -n "$ip" ] || { echo "Conectate a Wi-Fi primero."; exit 1; }
+url="http://$ip:$port"
+echo "Compartiendo $(cd "$dir" && pwd) en $url (Ctrl+C para parar)"
+command -v qrencode >/dev/null && qrencode -t ANSIUTF8 "$url"
+cd "$dir" && exec python -m http.server "$port" --bind 0.0.0.0
