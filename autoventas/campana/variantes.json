@@ -1,0 +1,52 @@
+{
+ "corto": [
+  {
+   "texto": "Armé el Termux Pack Completo: un comando instala 7 herramientas (QR para compartir carpetas, respaldo, limpieza...), más cheatsheet PDF y 40 prompts para programar con IA. Todo en español, $100 MXN: {LINK} {AVISO}"
+  },
+  {
+   "texto": "Truco gratis de Termux: comparte una carpeta por Wi-Fi con QR → qrencode + python -m http.server. Dejé este y 6 scripts más listos en un instalador: {LINK} {AVISO}"
+  },
+  {
+   "texto": "¿Cansado de configurar Termux desde cero? Un comando y listo: alias, tmux, respaldo a la SD y más. Incluye PDF de comandos Termux/Git/Linux. $100 MXN: {LINK} {AVISO}"
+  }
+ ],
+ "telegram": [
+  {
+   "texto": "Armé el Termux Pack Completo: un comando instala 7 herramientas (QR para compartir carpetas, respaldo, limpieza...), más cheatsheet PDF y 40 prompts para programar con IA. Todo en español, $100 MXN: {LINK} {AVISO}"
+  },
+  {
+   "texto": "Truco gratis de Termux: comparte una carpeta por Wi-Fi con QR → qrencode + python -m http.server. Dejé este y 6 scripts más listos en un instalador: {LINK} {AVISO}"
+  },
+  {
+   "texto": "¿Cansado de configurar Termux desde cero? Un comando y listo: alias, tmux, respaldo a la SD y más. Incluye PDF de comandos Termux/Git/Linux. $100 MXN: {LINK} {AVISO}"
+  }
+ ],
+ "bluesky": [
+  {
+   "texto": "Armé el Termux Pack Completo: un comando instala 7 herramientas (QR para compartir carpetas, respaldo, limpieza...), más cheatsheet PDF y 40 prompts para programar con IA. Todo en español, $100 MXN: {LINK} {AVISO}"
+  },
+  {
+   "texto": "Truco gratis de Termux: comparte una carpeta por Wi-Fi con QR → qrencode + python -m http.server. Dejé este y 6 scripts más listos en un instalador: {LINK} {AVISO}"
+  },
+  {
+   "texto": "¿Cansado de configurar Termux desde cero? Un comando y listo: alias, tmux, respaldo a la SD y más. Incluye PDF de comandos Termux/Git/Linux. $100 MXN: {LINK} {AVISO}"
+  }
+ ],
+ "mastodon": [
+  {
+   "texto": "Armé el Termux Pack Completo: un comando instala 7 herramientas (QR para compartir carpetas, respaldo, limpieza...), más cheatsheet PDF y 40 prompts para programar con IA. Todo en español, $100 MXN: {LINK} {AVISO}"
+  },
+  {
+   "texto": "Truco gratis de Termux: comparte una carpeta por Wi-Fi con QR → qrencode + python -m http.server. Dejé este y 6 scripts más listos en un instalador: {LINK} {AVISO}"
+  },
+  {
+   "texto": "¿Cansado de configurar Termux desde cero? Un comando y listo: alias, tmux, respaldo a la SD y más. Incluye PDF de comandos Termux/Git/Linux. $100 MXN: {LINK} {AVISO}"
+  }
+ ],
+ "devto": [
+  {
+   "titulo": "5 comandos que le faltan a tu Termux (y un instalador para tenerlos todos)",
+   "texto": "Cuando instalas Termux, lo primero es pasar una hora configurándolo. Estas son las cinco cosas que más uso, con el código para que las copies gratis.\n\n## 1. Compartir una carpeta por Wi-Fi con QR\n```bash\nip=$(ip -4 addr show wlan0 | awk '/inet /{sub(\"/.*\",\"\",$2);print $2}')\nqrencode -t ANSIUTF8 \"http://$ip:8080\" && python -m http.server 8080 --bind 0.0.0.0\n```\nEscaneas el QR con otro celular y descargas lo que haya en la carpeta.\n\n## 2. Respaldo de tu $HOME a la tarjeta\n```bash\ntermux-setup-storage\ntar -czf /sdcard/termux-$(date +%F).tar.gz -C ~ --exclude=.cache --exclude=storage .\n```\n\n## 3. Liberar espacio\n```bash\npkg clean -y; rm -rf ~/.cache $TMPDIR/*\n```\n\n## 4. Notas rápidas con fecha\n```bash\necho \"$(date '+%F %H:%M') mi nota\" >> ~/.notas && cat -n ~/.notas\n```\n\n## 5. tmux con mouse\n```bash\nprintf 'set -g mouse on\\nset -g history-limit 20000\\n' > ~/.tmux.conf\n```\n\n## ¿Quieres todo ya armado?\nJunté estos scripts (y más) en un **instalador de un comando**, más un cheatsheet PDF de Termux + Git + Linux y 40 prompts para programar con IA, todo en español: **Termux Pack Completo, $100 MXN** → {LINK}\n\n_{AVISO}_"
+  }
+ ]
+}
