@@ -1,11 +1,11 @@
 # Textos listos para publicar (copiar y pegar)
 
-Link de compra: https://link.mercadopago.com.mx/sauljtm34norxtec ($100 MXN)
+Pack completo (instalador + 2 PDFs): https://link.mercadopago.com.mx/sauljtm34norxtec ($100 MXN)
 
 ## Telegram / Discord / WhatsApp (corto)
-Armé el **Termux Power Pack**: un comando instala 7 herramientas para Termux
+Armé el **Termux Pack Completo**: un comando instala 7 herramientas para Termux
 (QR para compartir carpetas por Wi-Fi, respaldo a la SD, limpieza de caché, notas,
-info del sistema, tmux y prompt configurados). En español, $100 MXN.
+info del sistema, tmux y prompt configurados). Incluye además un cheatsheet PDF y 40 prompts para programar con IA. Todo en español por $100 MXN.
 Compra y te mando el .zip: https://link.mercadopago.com.mx/sauljtm34norxtec
 
 ## Reddit (r/termux, r/AndroidMX, r/mexico_tech) - respeta las reglas de cada sub
