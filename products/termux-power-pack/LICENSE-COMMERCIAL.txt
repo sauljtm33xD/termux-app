@@ -1,0 +1,23 @@
+Termux Power Pack — Licencia de uso comercial (un solo usuario)
+
+Copyright (c) 2026, el comprador de esta licencia.
+
+Al comprar este producto se te concede una licencia personal,
+no exclusiva y no transferible para:
+
+  1. Instalar y usar los scripts incluidos en tus propios dispositivos.
+  2. Modificar los scripts para tu uso personal o dentro de tu propia
+     organización.
+
+No se te concede permiso para:
+
+  1. Redistribuir, revender o publicar el pack (modificado o sin
+     modificar) como producto propio, gratuito o de pago.
+  2. Compartir tu copia con terceros fuera de tu organización.
+
+Los scripts se entregan "tal cual", sin garantía de ningún tipo.
+Revisa el contenido de cada script antes de ejecutarlo en tus
+dispositivos; en particular, los que borran o sobrescriben archivos
+(`storage-cleaner.sh`, `restore-termux.sh`) incluyen modos seguros por
+defecto precisamente para que puedas comprobar su comportamiento antes
+de aplicarlo.
