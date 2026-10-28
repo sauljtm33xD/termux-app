@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FastDL PRO
+Comment=High-speed parallel downloader with batch, torrent and web search
+Exec=python3 /path/to/fastdl/src/main.py
+Icon=download
+Terminal=false
+Categories=Utility;Network;
+StartupNotify=true
