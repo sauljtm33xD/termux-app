@@ -82,8 +82,8 @@ string get_process_cmdline(const pid_t pid) {
     char buf[BUFSIZ];
     size_t len;
     char procfile[BUFSIZ];
-    sprintf(procfile, "/proc/%d/cmdline", pid);
-    FILE *fp = fopen(procfile, "rb");
+    snprintf(procfile, sizeof(procfile), "/proc/%d/cmdline", pid);
+    FILE *fp = fopen(procfile, "rbe");
     if (fp) {
         while ((len = fread(buf, 1, sizeof(buf), fp)) > 0) {
             cmdline.append(buf, len);
@@ -262,7 +262,7 @@ Java_com_termux_shared_net_socket_local_LocalSocketManager_createServerSocketNat
     }
 
     // Create server socket
-    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    int fd = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
     if (fd == -1) {
         return getJniResult(env, logTitle, -1, errno, "createServerSocketNative(): Create local socket failed");
     }
@@ -339,7 +339,7 @@ Java_com_termux_shared_net_socket_local_LocalSocketManager_acceptNative(JNIEnv *
     }
 
     // Accept client socket
-    int clientFd = accept(fd, nullptr, nullptr);
+    int clientFd = accept4(fd, nullptr, nullptr, SOCK_CLOEXEC);
     if (clientFd == -1) {
         return getJniResult(env, logTitle, -1, errno, "acceptNative(): Failed to accept client on fd " + to_string(fd));
     }
